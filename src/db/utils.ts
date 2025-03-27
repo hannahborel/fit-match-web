@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { db } from "./db";
-import { leagues, matches, users } from "./schema";
+import { activities, leagues, matches, users } from "./schema";
 
 export const getUserById = async (id: string) => {
   return await db.query.users.findFirst({
@@ -25,5 +25,11 @@ export const getMatchById = async (id: string) => {
       activities: true,
       messages: true,
     },
+  });
+};
+
+export const getActivityById = async (id: string) => {
+  return await db.query.activities.findFirst({
+    where: eq(activities.id, id),
   });
 };

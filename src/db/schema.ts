@@ -111,6 +111,7 @@ export const activities = pgTable("activities", {
   activityKpi1: text().notNull(),
   activityKpi2: text().notNull(),
   activityKpi3: text().notNull(),
+  score: integer().notNull().default(0),
   createdAt: timestamp().notNull().defaultNow(),
   updatedAt: timestamp().notNull().defaultNow(),
 });
