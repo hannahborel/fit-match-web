@@ -19,7 +19,7 @@ export type InsertLeague = typeof leagues.$inferInsert;
 
 export const leaguesRelations = relations(leagues, ({ many }) => ({
   users: many(leaguesToUsers),
-  activities: many(activities),
+  loggedActivities: many(loggedActivities),
   messages: many(leagueMessages),
   matches: many(matches),
 }));
@@ -36,6 +36,8 @@ export const users = pgTable("users", {
 
 export const usersRelations = relations(users, ({ many }) => ({
   leagues: many(leaguesToUsers),
+  loggedActivities: many(loggedActivities),
+  matches: many(matchesToUsers),
 }));
 
 export type User = typeof users.$inferSelect;
@@ -58,7 +60,7 @@ export const matchesRelations = relations(matches, ({ one, many }) => ({
     references: [leagues.id],
   }),
   users: many(matchesToUsers),
-  activities: many(activities),
+  loggedActivities: many(loggedActivities),
   messages: many(matchMessages),
 }));
 
@@ -102,7 +104,7 @@ export const leaguesToUsersRelations = relations(leaguesToUsers, ({ one }) => ({
   }),
 }));
 
-export const activities = pgTable("activities", {
+export const loggedActivities = pgTable("loggedActivities", {
   id: uuid().primaryKey().defaultRandom(),
   leagueId: uuid().notNull(),
   matchId: uuid().notNull(),
@@ -111,27 +113,31 @@ export const activities = pgTable("activities", {
   activityKpi1: text().notNull(),
   activityKpi2: text().notNull(),
   activityKpi3: text().notNull(),
+  score: integer().notNull().default(0),
   createdAt: timestamp().notNull().defaultNow(),
   updatedAt: timestamp().notNull().defaultNow(),
 });
 
-export type Activity = typeof activities.$inferSelect;
-export type InsertActivity = typeof activities.$inferInsert;
+export type LoggedActivity = typeof loggedActivities.$inferSelect;
+export type InsertLoggedActivity = typeof loggedActivities.$inferInsert;
 
-export const activitiesRelations = relations(activities, ({ one }) => ({
-  league: one(leagues, {
-    fields: [activities.leagueId],
-    references: [leagues.id],
-  }),
-  match: one(matches, {
-    fields: [activities.matchId],
-    references: [matches.id],
-  }),
-  user: one(users, {
-    fields: [activities.userId],
-    references: [users.id],
-  }),
-}));
+export const loggedActivitiesRelations = relations(
+  loggedActivities,
+  ({ one }) => ({
+    league: one(leagues, {
+      fields: [loggedActivities.leagueId],
+      references: [leagues.id],
+    }),
+    match: one(matches, {
+      fields: [loggedActivities.matchId],
+      references: [matches.id],
+    }),
+    user: one(users, {
+      fields: [loggedActivities.userId],
+      references: [users.id],
+    }),
+  })
+);
 
 export const leagueMessages = pgTable("leagueMessages", {
   id: uuid().primaryKey().defaultRandom(),
