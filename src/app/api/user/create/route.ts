@@ -1,18 +1,16 @@
 import CreateUser from "@/actions/CreateUser";
 import { insertUserFormSchema } from "@/db/formSchema";
-import { User } from "@/db/schema";
-import { ApiErrorResponse } from "@/types/types";
-import { NextApiRequest, NextApiResponse } from "next";
 
-const handler = async (
-  req: NextApiRequest,
-  res: NextApiResponse<User | ApiErrorResponse>
-) => {
-  const parsedData = insertUserFormSchema.parse(req.body);
-  const insertedUser = await CreateUser(parsedData);
-  if (insertedUser) {
-    return res.status(200).json(insertedUser);
+export const POST = async (req: Request) => {
+  const body = await req.json();
+
+  try {
+    const parsedBody = insertUserFormSchema.parse(body);
+
+    const user = await CreateUser(parsedBody);
+
+    return Response.json(user);
+  } catch (error) {
+    return Response.json({ error }, { status: 500 });
   }
 };
-
-export default handler;
