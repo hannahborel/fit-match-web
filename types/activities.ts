@@ -1,26 +1,25 @@
-export enum ActivityType {
-  "JOGGING",
-  "SPRINTS",
-  "CIRCUT_TRAINING",
-  "INTERVAL_TRAINING",
-  "LONG_DISTANCE_RUNNING",
-  "TENNIS",
-  "BASKETBALL",
-  "FOOTBALL",
-  "VOLLEYBALL",
-  "BADMINTON",
-  "YOGA",
-  "PILATES",
-  "CYCLING",
-  "SWIMMING",
-  "WEIGHT_TRAINING",
-  "PICKLEBALL",
-  "GOLF",
-  "ROCK_CLIMBING",
-  "MARTIAL_ARTS",
-  "WALKING",
-  "OTHER",
-}
+export type ActivityType =
+  | "JOGGING"
+  | "SPRINTS"
+  | "CIRCUT_TRAINING"
+  | "INTERVAL_TRAINING"
+  | "LONG_DISTANCE_RUNNING"
+  | "TENNIS"
+  | "BASKETBALL"
+  | "FOOTBALL"
+  | "VOLLEYBALL"
+  | "BADMINTON"
+  | "YOGA"
+  | "PILATES"
+  | "CYCLING"
+  | "SWIMMING"
+  | "WEIGHT_TRAINING"
+  | "PICKLEBALL"
+  | "GOLF"
+  | "ROCK_CLIMBING"
+  | "MARTIAL_ARTS"
+  | "WALKING"
+  | "OTHER";
 
 export type ActivityDefinition = {
   name: string;
@@ -37,7 +36,7 @@ export type KpiDefinition = {
 };
 
 export const ActivityDefinitions: Record<ActivityType, ActivityDefinition> = {
-  [ActivityType.JOGGING]: {
+  JOGGING: {
     name: "Jogging",
     description:
       "A steady-paced run that builds endurance and burns calories. Perfect for beginners and those looking to maintain a consistent cardio routine!",
@@ -58,7 +57,7 @@ export const ActivityDefinitions: Record<ActivityType, ActivityDefinition> = {
       },
     ],
   },
-  [ActivityType.SPRINTS]: {
+  SPRINTS: {
     name: "Sprints",
     description:
       "High-intensity bursts of speed that boost power and metabolism. Push your limits with these explosive intervals!",
@@ -79,7 +78,7 @@ export const ActivityDefinitions: Record<ActivityType, ActivityDefinition> = {
       },
     ],
   },
-  [ActivityType.CIRCUT_TRAINING]: {
+  CIRCUT_TRAINING: {
     name: "Circuit Training",
     description:
       "A dynamic full-body workout combining strength and cardio. Keep your heart pumping while building muscle!",
@@ -100,7 +99,7 @@ export const ActivityDefinitions: Record<ActivityType, ActivityDefinition> = {
       },
     ],
   },
-  [ActivityType.INTERVAL_TRAINING]: {
+  INTERVAL_TRAINING: {
     name: "Interval Training",
     description:
       "Alternate between high and low intensity to maximize calorie burn and improve cardiovascular fitness!",
@@ -128,7 +127,7 @@ export const ActivityDefinitions: Record<ActivityType, ActivityDefinition> = {
       },
     ],
   },
-  [ActivityType.LONG_DISTANCE_RUNNING]: {
+  LONG_DISTANCE_RUNNING: {
     name: "Long Distance Running",
     description:
       "Build endurance and mental toughness with extended running sessions. Perfect for marathon training!",
@@ -149,7 +148,7 @@ export const ActivityDefinitions: Record<ActivityType, ActivityDefinition> = {
       },
     ],
   },
-  [ActivityType.TENNIS]: {
+  TENNIS: {
     name: "Tennis",
     description:
       "A dynamic sport that combines agility, strategy, and endurance. Challenge yourself with intense rallies!",
@@ -163,7 +162,7 @@ export const ActivityDefinitions: Record<ActivityType, ActivityDefinition> = {
       },
     ],
   },
-  [ActivityType.BASKETBALL]: {
+  BASKETBALL: {
     name: "Basketball",
     description:
       "Fast-paced team sport that builds coordination and explosive power. Show off your skills on the court!",
@@ -177,7 +176,7 @@ export const ActivityDefinitions: Record<ActivityType, ActivityDefinition> = {
       },
     ],
   },
-  [ActivityType.FOOTBALL]: {
+  FOOTBALL: {
     name: "Football",
     description:
       "High-energy team sport that combines speed, strength, and strategy. Give it your all on the field!",
@@ -191,7 +190,7 @@ export const ActivityDefinitions: Record<ActivityType, ActivityDefinition> = {
       },
     ],
   },
-  [ActivityType.VOLLEYBALL]: {
+  VOLLEYBALL: {
     name: "Volleyball",
     description:
       "Dynamic team sport that builds coordination and explosive power. Spike your way to victory!",
@@ -205,7 +204,7 @@ export const ActivityDefinitions: Record<ActivityType, ActivityDefinition> = {
       },
     ],
   },
-  [ActivityType.BADMINTON]: {
+  BADMINTON: {
     name: "Badminton",
     description:
       "Fast-paced racquet sport that improves reflexes and agility. Challenge your opponent with quick rallies!",
@@ -219,7 +218,7 @@ export const ActivityDefinitions: Record<ActivityType, ActivityDefinition> = {
       },
     ],
   },
-  [ActivityType.YOGA]: {
+  YOGA: {
     name: "Yoga",
     description:
       "Mind-body practice that improves flexibility and mental focus. Find your inner peace and strength!",
@@ -233,7 +232,7 @@ export const ActivityDefinitions: Record<ActivityType, ActivityDefinition> = {
       },
     ],
   },
-  [ActivityType.PILATES]: {
+  PILATES: {
     name: "Pilates",
     description:
       "Low-impact workout that strengthens core muscles and improves posture. Build a strong foundation!",
@@ -247,7 +246,7 @@ export const ActivityDefinitions: Record<ActivityType, ActivityDefinition> = {
       },
     ],
   },
-  [ActivityType.CYCLING]: {
+  CYCLING: {
     name: "Cycling",
     description:
       "Low-impact cardio that builds leg strength and endurance. Pedal your way to fitness!",
@@ -268,7 +267,7 @@ export const ActivityDefinitions: Record<ActivityType, ActivityDefinition> = {
       },
     ],
   },
-  [ActivityType.SWIMMING]: {
+  SWIMMING: {
     name: "Swimming",
     description:
       "Full-body workout that's gentle on joints. Glide through the water and build strength!",
@@ -289,7 +288,7 @@ export const ActivityDefinitions: Record<ActivityType, ActivityDefinition> = {
       },
     ],
   },
-  [ActivityType.WEIGHT_TRAINING]: {
+  WEIGHT_TRAINING: {
     name: "Weight Training",
     description:
       "Build muscle and increase strength with targeted resistance exercises. Push your limits!",
@@ -310,7 +309,7 @@ export const ActivityDefinitions: Record<ActivityType, ActivityDefinition> = {
       },
     ],
   },
-  [ActivityType.PICKLEBALL]: {
+  PICKLEBALL: {
     name: "Pickleball",
     description:
       "Fun paddle sport that combines elements of tennis and ping pong. Perfect for all skill levels!",
@@ -324,7 +323,7 @@ export const ActivityDefinitions: Record<ActivityType, ActivityDefinition> = {
       },
     ],
   },
-  [ActivityType.GOLF]: {
+  GOLF: {
     name: "Golf",
     description:
       "Strategic sport that combines walking with precise movements. Perfect your swing!",
@@ -338,7 +337,7 @@ export const ActivityDefinitions: Record<ActivityType, ActivityDefinition> = {
       },
     ],
   },
-  [ActivityType.ROCK_CLIMBING]: {
+  ROCK_CLIMBING: {
     name: "Rock Climbing",
     description:
       "Full-body workout that challenges both physical and mental strength. Reach new heights!",
@@ -352,7 +351,7 @@ export const ActivityDefinitions: Record<ActivityType, ActivityDefinition> = {
       },
     ],
   },
-  [ActivityType.MARTIAL_ARTS]: {
+  MARTIAL_ARTS: {
     name: "Martial Arts",
     description:
       "Discipline that combines physical training with mental focus. Build strength and confidence!",
@@ -366,7 +365,7 @@ export const ActivityDefinitions: Record<ActivityType, ActivityDefinition> = {
       },
     ],
   },
-  [ActivityType.WALKING]: {
+  WALKING: {
     name: "Walking",
     description:
       "Low-impact cardio that's perfect for all fitness levels. Take steps towards better health!",
@@ -387,7 +386,7 @@ export const ActivityDefinitions: Record<ActivityType, ActivityDefinition> = {
       },
     ],
   },
-  [ActivityType.OTHER]: {
+  OTHER: {
     name: "Other",
     description:
       "Custom activity type for tracking other forms of exercise and movement.",

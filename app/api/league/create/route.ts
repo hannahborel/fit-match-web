@@ -1,4 +1,4 @@
-import CreateLeague from "@/actions/CreateLeague";
+import CreateLeague from "@/actions/createLeague";
 import { insertLeagueFormSchema } from "@/db/formSchema";
 
 export const POST = async (req: Request) => {

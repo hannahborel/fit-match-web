@@ -1,4 +1,4 @@
-import { ActivityDefinitions } from "@/types/activityEnum";
+import { ActivityDefinitions } from "@/types/activities";
 
 export const GET = () => {
   return Response.json(ActivityDefinitions);

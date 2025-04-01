@@ -1,11 +1,16 @@
 "use server";
 
 import { db } from "@/db/db";
-import { InsertLoggedActivity, loggedActivities } from "@/db/schema";
+import { logActivityFormSchema } from "@/db/formSchema";
+import { loggedActivities } from "@/db/schema";
 import { getActivityById } from "@/db/utils";
+import { SubmitHandler } from "react-hook-form";
+import { z } from "zod";
 
-const LogActivity = async (insertActivity: InsertLoggedActivity) => {
-  insertActivity.score = 0;
+const logActivity: SubmitHandler<
+  z.infer<typeof logActivityFormSchema>
+> = async (data) => {
+  const insertActivity = logActivityFormSchema.parse(data);
   const insertedActivityIds = await db
     .insert(loggedActivities)
     .values(insertActivity)
@@ -13,4 +18,4 @@ const LogActivity = async (insertActivity: InsertLoggedActivity) => {
   return await getActivityById(insertedActivityIds[0].id);
 };
 
-export { LogActivity };
+export { logActivity };

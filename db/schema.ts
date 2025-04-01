@@ -1,6 +1,12 @@
 import { relations } from "drizzle-orm";
-import { integer, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
-
+import {
+  decimal,
+  integer,
+  pgTable,
+  text,
+  timestamp,
+  uuid,
+} from "drizzle-orm/pg-core";
 // Entities
 export const leagues = pgTable("leagues", {
   id: uuid().primaryKey().defaultRandom(),
@@ -110,9 +116,9 @@ export const loggedActivities = pgTable("loggedActivities", {
   matchId: uuid().notNull(),
   userId: uuid().notNull(),
   activityType: text().notNull(),
-  activityKpi1: text().notNull(),
-  activityKpi2: text().notNull(),
-  activityKpi3: text().notNull(),
+  activityKpi1: decimal().notNull().default("0.0"),
+  activityKpi2: decimal().notNull().default("0.0"),
+  activityKpi3: decimal().notNull().default("0.0"),
   score: integer().notNull().default(0),
   createdAt: timestamp().notNull().defaultNow(),
   updatedAt: timestamp().notNull().defaultNow(),

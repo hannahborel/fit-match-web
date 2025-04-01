@@ -1,4 +1,4 @@
-import CreateUser from "@/actions/CreateUser";
+import CreateUser from "@/actions/createUser";
 import { insertUserFormSchema } from "@/db/formSchema";
 
 export const POST = async (req: Request) => {
