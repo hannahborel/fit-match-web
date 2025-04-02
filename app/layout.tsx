@@ -1,5 +1,6 @@
 import "@/app/globals.css";
 import type { Metadata } from "next";
+import { ClerkProvider } from "@clerk/nextjs";
 
 export const metadata: Metadata = {
   title: "FitMatch",
@@ -13,7 +14,16 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="">{children}</body>
+      <body className="">
+        <ClerkProvider
+          signInUrl={"/sign-in"}
+          signUpUrl={"/sign-up"}
+          signInForceRedirectUrl={"/dashboard"}
+          signUpForceRedirectUrl={"/dashboard"}
+        >
+          {children}
+        </ClerkProvider>
+      </body>
     </html>
   );
 }

@@ -30,6 +30,7 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
+import { logActivity } from "@/actions/logActivity";
 
 export type LogActivityCardProps = {
   leagueId: string;
@@ -37,7 +38,7 @@ export type LogActivityCardProps = {
   userId: string;
 };
 
-const LogActivity: React.FC<LogActivityCardProps> = ({
+const LogActivityCard: React.FC<LogActivityCardProps> = ({
   leagueId,
   matchId,
   userId,
@@ -55,8 +56,8 @@ const LogActivity: React.FC<LogActivityCardProps> = ({
     },
   });
 
-  const onSubmit = (data: z.infer<typeof logActivityFormSchema>) => {
-    LogActivity(data);
+  const onSubmit = async (data: z.infer<typeof logActivityFormSchema>) => {
+    await logActivity(data);
     form.reset();
   };
 
@@ -140,4 +141,4 @@ const LogActivity: React.FC<LogActivityCardProps> = ({
   );
 };
 
-export default LogActivity;
+export default LogActivityCard;
