@@ -1,6 +1,6 @@
-import { createInsertSchema } from "drizzle-zod";
+import { createInsertSchema, createUpdateSchema } from "drizzle-zod";
 import { z } from "zod";
-import { leagues, loggedActivities, users } from "./schema";
+import { activityChallenges, leagues, loggedActivities, users } from "./schema";
 
 const defaultRequiredTextField = z
   .string()
@@ -34,6 +34,10 @@ export const insertLeagueFormSchema = createInsertSchema(leagues, {
   start_date: defaultRequiredDateField,
 });
 
+export const updateLeagueFormSchema = createUpdateSchema(leagues, {
+  id: defaultRequiredTextField,
+});
+
 export const insertUserFormSchema = createInsertSchema(users, {
   name: defaultRequiredTextField,
   email: defaultRequiredTextField,
@@ -47,3 +51,13 @@ export const logActivityFormSchema = createInsertSchema(loggedActivities, {
   activityType: defaultRequiredTextField,
   score: z.number().optional(),
 });
+
+export const challengeActivityFormSchema = createInsertSchema(
+  activityChallenges,
+  {
+    leagueId: defaultRequiredTextField,
+    activityId: defaultRequiredTextField,
+    userId: defaultRequiredTextField,
+    challengeReason: defaultRequiredTextField,
+  }
+);

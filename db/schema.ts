@@ -1,5 +1,6 @@
 import { relations } from "drizzle-orm";
 import {
+  boolean,
   decimal,
   integer,
   pgTable,
@@ -20,14 +21,18 @@ export const leagues = pgTable("leagues", {
   updatedAt: timestamp().notNull().defaultNow(),
 });
 
-export type League = typeof leagues.$inferSelect;
+export type League = typeof leagues.$inferSelect & {
+  leaguesToUsers: (LeagueToUser & { user: User })[];
+};
 export type InsertLeague = typeof leagues.$inferInsert;
+export type UpdateLeague = Omit<Partial<League>, "id"> & Pick<League, "id">;
 
 export const leaguesRelations = relations(leagues, ({ many }) => ({
-  users: many(leaguesToUsers),
+  leaguesToUsers: many(leaguesToUsers),
   loggedActivities: many(loggedActivities),
   messages: many(leagueMessages),
   matches: many(matches),
+  activityChallenges: many(activityChallenges),
 }));
 
 export const users = pgTable("users", {
@@ -38,6 +43,7 @@ export const users = pgTable("users", {
   password: text().notNull(),
   createdAt: timestamp().notNull().defaultNow(),
   updatedAt: timestamp().notNull().defaultNow(),
+  isBot: boolean().notNull().default(false),
 });
 
 export const usersRelations = relations(users, ({ many }) => ({
@@ -65,7 +71,7 @@ export const matchesRelations = relations(matches, ({ one, many }) => ({
     fields: [matches.leagueId],
     references: [leagues.id],
   }),
-  users: many(matchesToUsers),
+  matchesToUsers: many(matchesToUsers),
   loggedActivities: many(loggedActivities),
   messages: many(matchMessages),
 }));
@@ -74,6 +80,7 @@ export const matchesToUsers = pgTable("matchesToUsers", {
   id: uuid().primaryKey().defaultRandom(),
   matchId: uuid().notNull(),
   userId: uuid().notNull(),
+  teamIndex: integer().notNull(),
 });
 
 export type MatchToUser = typeof matchesToUsers.$inferSelect;
@@ -142,6 +149,10 @@ export const loggedActivitiesRelations = relations(
       fields: [loggedActivities.userId],
       references: [users.id],
     }),
+    challenge: one(activityChallenges, {
+      fields: [loggedActivities.id],
+      references: [activityChallenges.activityId],
+    }),
   })
 );
 
@@ -190,3 +201,19 @@ export const matchMessagesRelations = relations(matchMessages, ({ one }) => ({
     references: [leagues.id],
   }),
 }));
+
+export const activityChallenges = pgTable("activityChallenges", {
+  id: uuid().primaryKey().defaultRandom(),
+  leagueId: uuid().notNull(),
+  activityId: uuid().notNull(),
+  userId: uuid().notNull(),
+  challengeReason: text().notNull(),
+  challengeEndTime: timestamp().notNull(),
+  challengeVotesFor: integer().notNull().default(0),
+  challengeVotesAgainst: integer().notNull().default(0),
+  createdAt: timestamp().notNull().defaultNow(),
+  updatedAt: timestamp().notNull().defaultNow(),
+});
+
+export type ActivityChallenge = typeof activityChallenges.$inferSelect;
+export type InsertActivityChallenge = typeof activityChallenges.$inferInsert;

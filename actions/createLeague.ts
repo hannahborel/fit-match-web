@@ -4,7 +4,7 @@ import { InsertLeague, leagues } from "@/db/schema";
 import { getLeagueById } from "@/db/utils";
 import { auth } from "@clerk/nextjs/server";
 
-const CreateLeague = async (insertLeague: InsertLeague) => {
+const createLeague = async (insertLeague: InsertLeague) => {
   const { userId } = await auth();
   if (!userId) {
     throw new Error("You must be signed in");
@@ -16,4 +16,4 @@ const CreateLeague = async (insertLeague: InsertLeague) => {
   return await getLeagueById(insertedLeagueIds[0].id);
 };
 
-export default CreateLeague;
+export default createLeague;
