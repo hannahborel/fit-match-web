@@ -53,8 +53,6 @@ const LogActivityCard: React.FC<LogActivityCardProps> = ({
       leagueId: leagueId,
       matchId: matchId,
       userId: userId,
-      photoId: "00000000-0000-0000-0000-000000000000",
-      activityNote: "",
     },
   });
 

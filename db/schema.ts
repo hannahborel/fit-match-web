@@ -128,8 +128,8 @@ export const loggedActivities = pgTable("loggedActivities", {
   reps: integer().notNull().default(0),
   cardioPoints: integer().notNull().default(0),
   strengthPoints: integer().notNull().default(0),
-  photoId: uuid().notNull(),
-  activityNote: text().notNull(),
+  photoId: uuid(),
+  activityNote: text(),
   createdAt: timestamp().notNull().defaultNow(),
   updatedAt: timestamp().notNull().defaultNow(),
 });
