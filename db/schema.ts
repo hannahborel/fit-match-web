@@ -1,7 +1,6 @@
 import { relations } from "drizzle-orm";
 import {
   boolean,
-  decimal,
   integer,
   pgTable,
   text,
@@ -123,10 +122,11 @@ export const loggedActivities = pgTable("loggedActivities", {
   matchId: uuid().notNull(),
   userId: uuid().notNull(),
   activityType: text().notNull(),
-  activityKpi1: decimal().notNull().default("0.0"),
-  activityKpi2: decimal().notNull().default("0.0"),
-  activityKpi3: decimal().notNull().default("0.0"),
-  score: integer().notNull().default(0),
+  duration: integer().notNull().default(0),
+  sets: integer().notNull().default(0),
+  reps: integer().notNull().default(0),
+  cardioPoints: integer().notNull().default(0),
+  strengthPoints: integer().notNull().default(0),
   createdAt: timestamp().notNull().defaultNow(),
   updatedAt: timestamp().notNull().defaultNow(),
 });

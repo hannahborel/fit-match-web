@@ -49,7 +49,11 @@ export const logActivityFormSchema = createInsertSchema(loggedActivities, {
   matchId: defaultRequiredTextField,
   userId: defaultRequiredTextField,
   activityType: defaultRequiredTextField,
-  score: z.number().optional(),
+  duration: defaultRequiredNumberField,
+  sets: defaultRequiredNumberField,
+  reps: defaultRequiredNumberField,
+  cardioPoints: z.number().optional(),
+  strengthPoints: z.number().optional(),
 });
 
 export const challengeActivityFormSchema = createInsertSchema(

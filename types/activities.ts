@@ -1,4 +1,5 @@
 export type ActivityType =
+  | "RUNNING"
   | "JOGGING"
   | "SPRINTS"
   | "CIRCUT_TRAINING"
@@ -19,385 +20,197 @@ export type ActivityType =
   | "ROCK_CLIMBING"
   | "MARTIAL_ARTS"
   | "WALKING"
+  | "HIIT"
+  | "DANCE"
   | "OTHER";
+
+export type activityFormula = "DURATION" | "SETSANDREPS";
 
 export type ActivityDefinition = {
   name: string;
   description: string;
-  kpis: KpiDefinition[];
+  activityFormula: activityFormula;
+  cardioMultipilier: number;
+  strengthMultipilier: number;
 };
-
-export type KpiDefinition = {
-  name: string;
-  description: string;
-  unit: string;
-  min: number;
-  max: number;
-};
-
 export const ActivityDefinitions: Record<ActivityType, ActivityDefinition> = {
-  JOGGING: {
-    name: "Jogging",
-    description:
-      "A steady-paced run that builds endurance and burns calories. Perfect for beginners and those looking to maintain a consistent cardio routine!",
-    kpis: [
-      {
-        name: "Distance",
-        description: "Total distance covered",
-        unit: "km",
-        min: 1,
-        max: 10,
-      },
-      {
-        name: "Duration",
-        description: "Time spent jogging",
-        unit: "minutes",
-        min: 10,
-        max: 60,
-      },
-    ],
-  },
-  SPRINTS: {
-    name: "Sprints",
-    description:
-      "High-intensity bursts of speed that boost power and metabolism. Push your limits with these explosive intervals!",
-    kpis: [
-      {
-        name: "Sprint Distance",
-        description: "Distance of each sprint",
-        unit: "meters",
-        min: 50,
-        max: 200,
-      },
-      {
-        name: "Number of Sprints",
-        description: "Total number of sprint intervals",
-        unit: "count",
-        min: 4,
-        max: 20,
-      },
-    ],
-  },
   CIRCUT_TRAINING: {
     name: "Circuit Training",
     description:
-      "A dynamic full-body workout combining strength and cardio. Keep your heart pumping while building muscle!",
-    kpis: [
-      {
-        name: "Circuit Duration",
-        description: "Time per circuit",
-        unit: "minutes",
-        min: 5,
-        max: 15,
-      },
-      {
-        name: "Number of Circuits",
-        description: "Total circuits completed",
-        unit: "count",
-        min: 2,
-        max: 6,
-      },
-    ],
-  },
-  INTERVAL_TRAINING: {
-    name: "Interval Training",
-    description:
-      "Alternate between high and low intensity to maximize calorie burn and improve cardiovascular fitness!",
-    kpis: [
-      {
-        name: "High-Intensity Duration",
-        description: "Duration of high-intensity intervals",
-        unit: "seconds",
-        min: 30,
-        max: 120,
-      },
-      {
-        name: "Low-Intensity Duration",
-        description: "Duration of recovery intervals",
-        unit: "seconds",
-        min: 60,
-        max: 180,
-      },
-      {
-        name: "Count",
-        description: "Total number of high/low intensity pairs completed",
-        unit: "count",
-        min: 4,
-        max: 20,
-      },
-    ],
+      "A mix of strength and cardio exercises performed in a sequence.",
+    activityFormula: "DURATION",
+    cardioMultipilier: 1.2,
+    strengthMultipilier: 0.4,
   },
   LONG_DISTANCE_RUNNING: {
     name: "Long Distance Running",
-    description:
-      "Build endurance and mental toughness with extended running sessions. Perfect for marathon training!",
-    kpis: [
-      {
-        name: "Distance",
-        description: "Total distance covered",
-        unit: "km",
-        min: 5,
-        max: 42,
-      },
-      {
-        name: "Duration",
-        description: "Time spent running",
-        unit: "minutes",
-        min: 30,
-        max: 240,
-      },
-    ],
-  },
-  TENNIS: {
-    name: "Tennis",
-    description:
-      "A dynamic sport that combines agility, strategy, and endurance. Challenge yourself with intense rallies!",
-    kpis: [
-      {
-        name: "Duration",
-        description: "Time spent playing",
-        unit: "minutes",
-        min: 30,
-        max: 180,
-      },
-    ],
-  },
-  BASKETBALL: {
-    name: "Basketball",
-    description:
-      "Fast-paced team sport that builds coordination and explosive power. Show off your skills on the court!",
-    kpis: [
-      {
-        name: "Duration",
-        description: "Time spent playing",
-        unit: "minutes",
-        min: 30,
-        max: 120,
-      },
-    ],
+    description: "Endurance-focused running over extended distances.",
+    activityFormula: "DURATION",
+    cardioMultipilier: 1.3,
+    strengthMultipilier: 0.3,
   },
   FOOTBALL: {
     name: "Football",
-    description:
-      "High-energy team sport that combines speed, strength, and strategy. Give it your all on the field!",
-    kpis: [
-      {
-        name: "Duration",
-        description: "Time spent playing",
-        unit: "minutes",
-        min: 45,
-        max: 90,
-      },
-    ],
-  },
-  VOLLEYBALL: {
-    name: "Volleyball",
-    description:
-      "Dynamic team sport that builds coordination and explosive power. Spike your way to victory!",
-    kpis: [
-      {
-        name: "Duration",
-        description: "Time spent playing",
-        unit: "minutes",
-        min: 30,
-        max: 120,
-      },
-    ],
+    description: "A team sport that combines strategy, agility, and endurance.",
+    activityFormula: "DURATION",
+    cardioMultipilier: 1.0,
+    strengthMultipilier: 0.4,
   },
   BADMINTON: {
     name: "Badminton",
     description:
-      "Fast-paced racquet sport that improves reflexes and agility. Challenge your opponent with quick rallies!",
-    kpis: [
-      {
-        name: "Duration",
-        description: "Time spent playing",
-        unit: "minutes",
-        min: 20,
-        max: 90,
-      },
-    ],
-  },
-  YOGA: {
-    name: "Yoga",
-    description:
-      "Mind-body practice that improves flexibility and mental focus. Find your inner peace and strength!",
-    kpis: [
-      {
-        name: "Session Duration",
-        description: "Time spent practicing",
-        unit: "minutes",
-        min: 30,
-        max: 120,
-      },
-    ],
+      "A fast-paced racket sport that improves reflexes and agility.",
+    activityFormula: "DURATION",
+    cardioMultipilier: 0.7,
+    strengthMultipilier: 0.2,
   },
   PILATES: {
     name: "Pilates",
     description:
-      "Low-impact workout that strengthens core muscles and improves posture. Build a strong foundation!",
-    kpis: [
-      {
-        name: "Session Duration",
-        description: "Time spent practicing",
-        unit: "minutes",
-        min: 30,
-        max: 90,
-      },
-    ],
-  },
-  CYCLING: {
-    name: "Cycling",
-    description:
-      "Low-impact cardio that builds leg strength and endurance. Pedal your way to fitness!",
-    kpis: [
-      {
-        name: "Distance",
-        description: "Total distance covered",
-        unit: "km",
-        min: 5,
-        max: 100,
-      },
-      {
-        name: "Duration",
-        description: "Time spent cycling",
-        unit: "minutes",
-        min: 30,
-        max: 300,
-      },
-    ],
-  },
-  SWIMMING: {
-    name: "Swimming",
-    description:
-      "Full-body workout that's gentle on joints. Glide through the water and build strength!",
-    kpis: [
-      {
-        name: "Distance",
-        description: "Total distance swam",
-        unit: "meters",
-        min: 200,
-        max: 2000,
-      },
-      {
-        name: "Duration",
-        description: "Time spent swimming",
-        unit: "minutes",
-        min: 20,
-        max: 120,
-      },
-    ],
+      "Low-impact exercises that improve flexibility and core strength.",
+    activityFormula: "SETSANDREPS",
+    cardioMultipilier: 0.5,
+    strengthMultipilier: 0.3,
   },
   WEIGHT_TRAINING: {
     name: "Weight Training",
-    description:
-      "Build muscle and increase strength with targeted resistance exercises. Push your limits!",
-    kpis: [
-      {
-        name: "Total Sets",
-        description: "Total number of sets completed",
-        unit: "count",
-        min: 3,
-        max: 12,
-      },
-      {
-        name: "Reps per Set",
-        description: "Number of repetitions in each set",
-        unit: "count",
-        min: 3,
-        max: 20,
-      },
-    ],
+    description: "Strength-focused exercises using weights to build muscle.",
+    activityFormula: "SETSANDREPS",
+    cardioMultipilier: 0.4,
+    strengthMultipilier: 1.0,
   },
   PICKLEBALL: {
     name: "Pickleball",
     description:
-      "Fun paddle sport that combines elements of tennis and ping pong. Perfect for all skill levels!",
-    kpis: [
-      {
-        name: "Duration",
-        description: "Time spent playing",
-        unit: "minutes",
-        min: 30,
-        max: 90,
-      },
-    ],
+      "A paddle sport that combines elements of tennis, badminton, and ping-pong.",
+    activityFormula: "DURATION",
+    cardioMultipilier: 0.6,
+    strengthMultipilier: 0.2,
   },
   GOLF: {
     name: "Golf",
+    description: "A precision sport that combines walking and strategic play.",
+    activityFormula: "DURATION",
+    cardioMultipilier: 0.4,
+    strengthMultipilier: 0.1,
+  },
+  OTHER: {
+    name: "Other",
+    description: "Any other activity not listed here.",
+    activityFormula: "DURATION",
+    cardioMultipilier: 0.5,
+    strengthMultipilier: 0.2,
+  },
+  RUNNING: {
+    name: "Running",
+    description: "A high-intensity cardio activity that builds endurance.",
+    activityFormula: "DURATION",
+    cardioMultipilier: 1.0,
+    strengthMultipilier: 0.3,
+  },
+  JOGGING: {
+    name: "Jogging",
+    description: "A steady-paced run that builds endurance and burns calories.",
+    activityFormula: "DURATION",
+    cardioMultipilier: 0.7,
+    strengthMultipilier: 0.2,
+  },
+  SPRINTS: {
+    name: "Sprints",
     description:
-      "Strategic sport that combines walking with precise movements. Perfect your swing!",
-    kpis: [
-      {
-        name: "Number of Holes",
-        description: "Holes played",
-        unit: "count",
-        min: 9,
-        max: 18,
-      },
-    ],
+      "High-intensity bursts of speed that boost power and metabolism.",
+    activityFormula: "DURATION",
+    cardioMultipilier: 1.5,
+    strengthMultipilier: 0.4,
+  },
+  INTERVAL_TRAINING: {
+    name: "Interval Training",
+    description:
+      "Alternate between high and low intensity to maximize calorie burn.",
+    activityFormula: "DURATION",
+    cardioMultipilier: 1.5,
+    strengthMultipilier: 0.4,
+  },
+  CYCLING: {
+    name: "Cycling - Free",
+    description: "Low-impact cardio that builds leg strength and endurance.",
+    activityFormula: "DURATION",
+    cardioMultipilier: 0.8,
+    strengthMultipilier: 0.3,
+  },
+  SWIMMING: {
+    name: "Swimming",
+    description: "Full-body workout that's gentle on joints.",
+    activityFormula: "DURATION",
+    cardioMultipilier: 1.2,
+    strengthMultipilier: 0.4,
+  },
+  WALKING: {
+    name: "Walking",
+    description: "Low-impact cardio that's perfect for all fitness levels.",
+    activityFormula: "DURATION",
+    cardioMultipilier: 0.5,
+    strengthMultipilier: 0.2,
+  },
+  BASKETBALL: {
+    name: "Basketball",
+    description: "Fast-paced team sport that builds coordination and power.",
+    activityFormula: "DURATION",
+    cardioMultipilier: 1.0,
+    strengthMultipilier: 0.3,
+  },
+  TENNIS: {
+    name: "Tennis",
+    description:
+      "A dynamic sport that combines agility, strategy, and endurance.",
+    activityFormula: "DURATION",
+    cardioMultipilier: 0.8,
+    strengthMultipilier: 0.3,
+  },
+  VOLLEYBALL: {
+    name: "Volleyball",
+    description:
+      "Dynamic team sport that builds coordination and explosive power.",
+    activityFormula: "DURATION",
+    cardioMultipilier: 0.6,
+    strengthMultipilier: 0.2,
   },
   ROCK_CLIMBING: {
     name: "Rock Climbing",
     description:
-      "Full-body workout that challenges both physical and mental strength. Reach new heights!",
-    kpis: [
-      {
-        name: "Duration",
-        description: "Time spent climbing",
-        unit: "minutes",
-        min: 30,
-        max: 180,
-      },
-    ],
+      "Full-body workout that challenges both physical and mental strength.",
+    activityFormula: "SETSANDREPS",
+    cardioMultipilier: 1.2,
+    strengthMultipilier: 0.5,
   },
   MARTIAL_ARTS: {
     name: "Martial Arts",
     description:
-      "Discipline that combines physical training with mental focus. Build strength and confidence!",
-    kpis: [
-      {
-        name: "Duration",
-        description: "Time spent training",
-        unit: "minutes",
-        min: 45,
-        max: 120,
-      },
-    ],
+      "Discipline that combines physical training with mental focus.",
+    activityFormula: "SETSANDREPS",
+    cardioMultipilier: 1.0,
+    strengthMultipilier: 0.3,
   },
-  WALKING: {
-    name: "Walking",
+  HIIT: {
+    name: "HIIT / Circuit",
     description:
-      "Low-impact cardio that's perfect for all fitness levels. Take steps towards better health!",
-    kpis: [
-      {
-        name: "Distance",
-        description: "Total distance walked",
-        unit: "km",
-        min: 1,
-        max: 20,
-      },
-      {
-        name: "Duration",
-        description: "Time spent walking",
-        unit: "minutes",
-        min: 15,
-        max: 180,
-      },
-    ],
+      "High-intensity interval training that combines strength and cardio.",
+    activityFormula: "DURATION",
+    cardioMultipilier: 1.5,
+    strengthMultipilier: 0.5,
   },
-  OTHER: {
-    name: "Other",
-    description:
-      "Custom activity type for tracking other forms of exercise and movement.",
-    kpis: [
-      {
-        name: "Duration",
-        description: "Time spent in activity",
-        unit: "minutes",
-        min: 10,
-        max: 180,
-      },
-    ],
+  DANCE: {
+    name: "Dance",
+    description: "A fun and engaging way to improve cardio and coordination.",
+    activityFormula: "DURATION",
+    cardioMultipilier: 0.9,
+    strengthMultipilier: 0.3,
+  },
+  YOGA: {
+    name: " Yoga",
+    description: "A mind-body practice that enhances flexibility and strength.",
+    activityFormula: "DURATION",
+    cardioMultipilier: 0.3,
+    strengthMultipilier: 0.8,
   },
 };

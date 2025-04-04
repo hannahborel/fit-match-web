@@ -1,4 +1,5 @@
 "use client";
+import { logActivity } from "@/actions/logActivity";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -30,7 +31,6 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
-import { logActivity } from "@/actions/logActivity";
 
 export type LogActivityCardProps = {
   leagueId: string;
@@ -47,9 +47,9 @@ const LogActivityCard: React.FC<LogActivityCardProps> = ({
     resolver: zodResolver(logActivityFormSchema),
     defaultValues: {
       activityType: "",
-      activityKpi1: "",
-      activityKpi2: "",
-      activityKpi3: "",
+      duration: 0,
+      sets: 0,
+      reps: 0,
       leagueId: leagueId,
       matchId: matchId,
       userId: userId,
@@ -62,7 +62,6 @@ const LogActivityCard: React.FC<LogActivityCardProps> = ({
   };
 
   const activityType = form.watch("activityType");
-  const kpiFieldNames = ["activityKpi1", "activityKpi2", "activityKpi3"];
 
   return (
     <Card>
@@ -105,29 +104,62 @@ const LogActivityCard: React.FC<LogActivityCardProps> = ({
                 </FormItem>
               )}
             />
-            {activityType
-              ? ActivityDefinitions[activityType as ActivityType].kpis.map(
-                  (kpi, i) => (
-                    <FormField
-                      key={i}
-                      control={form.control}
-                      name={kpiFieldNames[i] as keyof typeof form.watch}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{kpi.name}</FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormDescription>
-                            What is the value of {kpi.name}?
-                          </FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  )
-                )
-              : null}
+            {activityType &&
+            ActivityDefinitions[activityType as ActivityType].activityFormula ==
+              "DURATION" ? (
+              <FormField
+                control={form.control}
+                name="duration"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Duration (minutes)</FormLabel>
+                    <FormControl>
+                      <Input type="number" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      How long did you do this activity?
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            ) : null}
+            {activityType &&
+            ActivityDefinitions[activityType as ActivityType].activityFormula ==
+              "SETSANDREPS" ? (
+              <FormField
+                control={form.control}
+                name="sets"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Sets</FormLabel>
+                    <FormControl>
+                      <Input type="number" {...field} />
+                    </FormControl>
+                    <FormDescription>How many sets did you do?</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            ) : null}
+            {activityType &&
+            ActivityDefinitions[activityType as ActivityType].activityFormula ==
+              "SETSANDREPS" ? (
+              <FormField
+                control={form.control}
+                name="reps"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Reps</FormLabel>
+                    <FormControl>
+                      <Input type="number" {...field} />
+                    </FormControl>
+                    <FormDescription>How many reps did you do?</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            ) : null}
             <Button type="submit">Submit</Button>
           </form>
         </Form>

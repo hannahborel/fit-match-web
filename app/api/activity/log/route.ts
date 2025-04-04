@@ -1,4 +1,4 @@
-import { logActivity } from "@/actions/logActivity";
+import { logActivity } from "@/actions/logDurationActivity";
 import { logActivityFormSchema } from "@/db/formSchema";
 
 export const POST = async (req: Request) => {
