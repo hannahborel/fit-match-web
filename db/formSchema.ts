@@ -11,9 +11,7 @@ const defaultRequiredTextField = z
 //   z.array(z.string()).nonempty({ message: "Select an option" })
 // );
 
-const defaultRequiredNumberField = z.coerce
-  .number()
-  .gt(0, { message: "Must be greater than 0" });
+const defaultRequiredNumberField = z.coerce.number();
 
 const defaultRequiredDateField = z.coerce.date({
   required_error: "Select a date",
@@ -54,6 +52,8 @@ export const logActivityFormSchema = createInsertSchema(loggedActivities, {
   reps: defaultRequiredNumberField,
   cardioPoints: z.number().optional(),
   strengthPoints: z.number().optional(),
+  photoId: z.string().optional(),
+  activityNote: z.string().optional(),
 });
 
 export const challengeActivityFormSchema = createInsertSchema(

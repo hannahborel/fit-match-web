@@ -53,6 +53,8 @@ const LogActivityCard: React.FC<LogActivityCardProps> = ({
       leagueId: leagueId,
       matchId: matchId,
       userId: userId,
+      photoId: "00000000-0000-0000-0000-000000000000",
+      activityNote: "",
     },
   });
 
@@ -60,6 +62,7 @@ const LogActivityCard: React.FC<LogActivityCardProps> = ({
     await logActivity(data);
     form.reset();
   };
+  console.log(form.formState.errors);
 
   const activityType = form.watch("activityType");
 
@@ -160,6 +163,20 @@ const LogActivityCard: React.FC<LogActivityCardProps> = ({
                 )}
               />
             ) : null}
+            <FormField
+              control={form.control}
+              name="activityNote"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Note</FormLabel>
+                  <FormControl>
+                    <Input type="text" {...field} />
+                  </FormControl>
+                  <FormDescription>Any other notes?</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <Button type="submit">Submit</Button>
           </form>
         </Form>

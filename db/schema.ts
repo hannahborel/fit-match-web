@@ -16,6 +16,7 @@ export const leagues = pgTable("leagues", {
   size: integer().notNull(),
   weeks: integer().notNull(),
   start_date: timestamp().notNull(),
+  magic_link: text().notNull(),
   createdAt: timestamp().notNull().defaultNow(),
   updatedAt: timestamp().notNull().defaultNow(),
 });
@@ -127,6 +128,8 @@ export const loggedActivities = pgTable("loggedActivities", {
   reps: integer().notNull().default(0),
   cardioPoints: integer().notNull().default(0),
   strengthPoints: integer().notNull().default(0),
+  photoId: uuid().notNull(),
+  activityNote: text().notNull(),
   createdAt: timestamp().notNull().defaultNow(),
   updatedAt: timestamp().notNull().defaultNow(),
 });
