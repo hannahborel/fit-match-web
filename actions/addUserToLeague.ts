@@ -1,17 +1,20 @@
 import { db } from "@/db/db";
-import { leaguesToUsers, loggedActivities, matchesToUsers } from "@/db/schema";
-import { getLeagueById } from "@/db/utils";
+import {
+  League,
+  leaguesToUsers,
+  loggedActivities,
+  matchesToUsers,
+} from "@/db/schema";
 import { auth } from "@clerk/nextjs/server";
 import { eq } from "drizzle-orm";
 import { removeUserFromLeague } from "./removeUserFromLeague";
 
-export const addUserToLeague = async (userId: string, leagueId: string) => {
+export const addUserToLeague = async (userId: string, league: League) => {
   const { userId: loggedInUserId } = await auth();
   if (!loggedInUserId) {
     throw new Error("You must be signed in");
   }
 
-  const league = await getLeagueById(leagueId);
   if (!league) {
     throw new Error("League not found");
   }
@@ -24,10 +27,10 @@ export const addUserToLeague = async (userId: string, leagueId: string) => {
   }
   if (league.leaguesToUsers.length == league.size) {
     const botUser = league.leaguesToUsers.find(
-      (leaguesToUser) => leaguesToUser.user.isBot
+      (leaguesToUser) => leaguesToUser.isBot
     );
     if (botUser) {
-      await removeUserFromLeague(botUser.userId, leagueId);
+      await removeUserFromLeague(botUser.userId, league.id);
       await db
         .update(matchesToUsers)
         .set({
@@ -46,6 +49,7 @@ export const addUserToLeague = async (userId: string, leagueId: string) => {
   }
   await db.insert(leaguesToUsers).values({
     userId,
-    leagueId,
+    leagueId: league.id,
+    isBot: false,
   });
 };

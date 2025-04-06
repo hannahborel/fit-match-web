@@ -1,6 +1,6 @@
 import { createInsertSchema, createUpdateSchema } from "drizzle-zod";
 import { z } from "zod";
-import { activityChallenges, leagues, loggedActivities, users } from "./schema";
+import { activityChallenges, leagues, loggedActivities } from "./schema";
 
 const defaultRequiredTextField = z
   .string()
@@ -13,10 +13,10 @@ const defaultRequiredTextField = z
 
 const defaultRequiredNumberField = z.coerce.number();
 
-const defaultRequiredDateField = z.coerce.date({
-  required_error: "Select a date",
-  invalid_type_error: "Enter a valid date",
-});
+// const defaultRequiredDateField = z.coerce.date({
+//   required_error: "Select a date",
+//   invalid_type_error: "Enter a valid date",
+// });
 
 // const defaultOptionalDateField = z.coerce
 //   .date({
@@ -29,31 +29,29 @@ export const insertLeagueFormSchema = createInsertSchema(leagues, {
   description: defaultRequiredTextField,
   size: defaultRequiredNumberField,
   weeks: defaultRequiredNumberField,
-  start_date: defaultRequiredDateField,
+  slug: z.string().optional(),
+  ownerId: z.string().optional(),
 });
 
 export const updateLeagueFormSchema = createUpdateSchema(leagues, {
   id: defaultRequiredTextField,
 });
-
-export const insertUserFormSchema = createInsertSchema(users, {
-  name: defaultRequiredTextField,
-  email: defaultRequiredTextField,
-  password: defaultRequiredTextField,
+export const deleteLeagueFormSchema = z.object({
+  id: defaultRequiredTextField,
 });
 
 export const logActivityFormSchema = createInsertSchema(loggedActivities, {
   leagueId: defaultRequiredTextField,
   matchId: defaultRequiredTextField,
-  userId: defaultRequiredTextField,
+  userId: z.string().optional(),
   activityType: defaultRequiredTextField,
   duration: defaultRequiredNumberField,
   sets: defaultRequiredNumberField,
   reps: defaultRequiredNumberField,
   cardioPoints: z.number().optional(),
   strengthPoints: z.number().optional(),
-  photoId: z.string().uuid(),
-  activityNote: z.string(),
+  photoUrl: defaultRequiredTextField,
+  activityNote: z.string().optional(),
 });
 
 export const challengeActivityFormSchema = createInsertSchema(

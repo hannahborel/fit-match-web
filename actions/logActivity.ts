@@ -2,10 +2,11 @@
 
 import { db } from "@/db/db";
 import { logActivityFormSchema } from "@/db/formSchema";
-import { loggedActivities } from "@/db/schema";
+import { InsertLoggedActivity, loggedActivities } from "@/db/schema";
 import { getActivityById } from "@/db/utils";
 import { ActivityDefinitions } from "@/types/activities";
 import { auth } from "@clerk/nextjs/server";
+import { revalidatePath } from "next/cache";
 import { SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 
@@ -36,11 +37,13 @@ const logActivity: SubmitHandler<
         activityDefinition.strengthMultipilier
     );
   }
-  const insertedActivityIds = await db
+  insertActivity.userId = userId;
+  await db
     .insert(loggedActivities)
-    .values(insertActivity)
+    .values(insertActivity as InsertLoggedActivity)
     .returning({ id: loggedActivities.id });
-  return await getActivityById(insertedActivityIds[0].id);
+
+  revalidatePath("/dev-tools");
 };
 
 export { logActivity };

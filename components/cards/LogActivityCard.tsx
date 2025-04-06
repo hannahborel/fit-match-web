@@ -35,13 +35,11 @@ import { Input } from "../ui/input";
 export type LogActivityCardProps = {
   leagueId: string;
   matchId: string;
-  userId: string;
 };
 
 const LogActivityCard: React.FC<LogActivityCardProps> = ({
   leagueId,
   matchId,
-  userId,
 }) => {
   const form = useForm<z.infer<typeof logActivityFormSchema>>({
     resolver: zodResolver(logActivityFormSchema),
@@ -52,7 +50,8 @@ const LogActivityCard: React.FC<LogActivityCardProps> = ({
       reps: 0,
       leagueId: leagueId,
       matchId: matchId,
-      userId: userId,
+      photoUrl:
+        "https://plus.unsplash.com/premium_photo-1670505062582-fdaa83c23c9e?q=80&w=3871&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     },
   });
 
@@ -60,10 +59,9 @@ const LogActivityCard: React.FC<LogActivityCardProps> = ({
     await logActivity(data);
     form.reset();
   };
-  console.log(form.formState.errors);
 
   const activityType = form.watch("activityType");
-
+  console.log(form.formState.errors);
   return (
     <Card>
       <CardHeader>
