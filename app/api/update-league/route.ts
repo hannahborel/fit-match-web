@@ -1,5 +1,6 @@
 import updateLeague from "@/actions/updateLeague";
 import { updateLeagueFormSchema } from "@/db/formSchema";
+import { NextResponse } from "next/server";
 
 export const POST = async (req: Request) => {
   const body = await req.json();
@@ -7,14 +8,17 @@ export const POST = async (req: Request) => {
   try {
     const parsedBody = updateLeagueFormSchema.parse(body);
     if (!parsedBody.id) {
-      return Response.json({ error: "League ID is required" }, { status: 400 });
+      return NextResponse.json(
+        { error: "League ID is required" },
+        { status: 400 }
+      );
     } else {
     }
 
     const league = await updateLeague(parsedBody);
 
-    return Response.json(league);
+    return NextResponse.json(league);
   } catch (error) {
-    return Response.json({ error }, { status: 500 });
+    return NextResponse.json({ error }, { status: 500 });
   }
 };

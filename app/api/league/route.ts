@@ -1,12 +1,12 @@
 import { getLeagueById } from "@/db/utils";
-
+import { NextResponse } from "next/server";
 export const GET = async (request: Request) => {
   const { leagueId } = await request.json();
 
   const league = await getLeagueById(leagueId);
   if (league) {
-    return Response.json(league);
+    return NextResponse.json(league);
   } else {
-    return Response.json({ message: "League not found" });
+    return NextResponse.json({ message: "League not found" });
   }
 };

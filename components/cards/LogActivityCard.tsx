@@ -45,6 +45,7 @@ const LogActivityCard: React.FC<LogActivityCardProps> = ({
     resolver: zodResolver(logActivityFormSchema),
     defaultValues: {
       activityType: "",
+      activityNote: "",
       duration: 0,
       sets: 0,
       reps: 0,

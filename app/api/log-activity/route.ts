@@ -1,5 +1,6 @@
 import { logActivity } from "@/actions/logActivity";
 import { logActivityFormSchema } from "@/db/formSchema";
+import { NextResponse } from "next/server";
 
 export const POST = async (req: Request) => {
   const body = await req.json();
@@ -9,8 +10,8 @@ export const POST = async (req: Request) => {
 
     const activity = await logActivity(parsedBody);
 
-    return Response.json(activity);
+    return NextResponse.json(activity);
   } catch (error) {
-    return Response.json({ error }, { status: 500 });
+    return NextResponse.json({ error }, { status: 500 });
   }
 };

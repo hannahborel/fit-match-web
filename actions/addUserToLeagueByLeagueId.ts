@@ -1,7 +1,8 @@
+"use server";
 import { getLeagueBySlug } from "@/db/utils";
 import { auth } from "@clerk/nextjs/server";
 import { addUserToLeague } from "./addUserToLeague";
-
+import { revalidatePath } from "next/cache";
 export const addUserToLeagueByLeagueId = async (
   userId: string,
   slug: string
@@ -16,4 +17,6 @@ export const addUserToLeagueByLeagueId = async (
     throw new Error("League not found");
   }
   await addUserToLeague(userId, league);
+
+  revalidatePath("/dev-tools");
 };

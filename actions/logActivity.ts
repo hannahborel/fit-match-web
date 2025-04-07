@@ -3,7 +3,6 @@
 import { db } from "@/db/db";
 import { logActivityFormSchema } from "@/db/formSchema";
 import { InsertLoggedActivity, loggedActivities } from "@/db/schema";
-import { getActivityById } from "@/db/utils";
 import { ActivityDefinitions } from "@/types/activities";
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
@@ -42,7 +41,6 @@ const logActivity: SubmitHandler<
     .insert(loggedActivities)
     .values(insertActivity as InsertLoggedActivity)
     .returning({ id: loggedActivities.id });
-
   revalidatePath("/dev-tools");
 };
 

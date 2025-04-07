@@ -1,5 +1,6 @@
 import CreateLeague from "@/actions/createLeague";
 import { insertLeagueFormSchema } from "@/db/formSchema";
+import { NextResponse } from "next/server";
 
 export const POST = async (req: Request) => {
   const body = await req.json();
@@ -9,8 +10,8 @@ export const POST = async (req: Request) => {
 
     const league = await CreateLeague(parsedBody);
 
-    return Response.json(league);
+    return NextResponse.json(league);
   } catch (error) {
-    return Response.json({ error }, { status: 500 });
+    return NextResponse.json({ error }, { status: 500 });
   }
 };

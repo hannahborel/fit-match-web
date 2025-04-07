@@ -6,8 +6,7 @@ import {
   matchesToUsers,
 } from "@/db/schema";
 import { auth } from "@clerk/nextjs/server";
-import { eq } from "drizzle-orm";
-import { removeUserFromLeague } from "./removeUserFromLeague";
+import { and, eq } from "drizzle-orm";
 
 export const addUserToLeague = async (userId: string, league: League) => {
   const { userId: loggedInUserId } = await auth();
@@ -30,7 +29,14 @@ export const addUserToLeague = async (userId: string, league: League) => {
       (leaguesToUser) => leaguesToUser.isBot
     );
     if (botUser) {
-      await removeUserFromLeague(botUser.userId, league.id);
+      await db
+        .delete(leaguesToUsers)
+        .where(
+          and(
+            eq(leaguesToUsers.userId, botUser.userId),
+            eq(leaguesToUsers.leagueId, league.id)
+          )
+        );
       await db
         .update(matchesToUsers)
         .set({

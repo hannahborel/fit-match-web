@@ -1,5 +1,5 @@
 "use client";
-import deleteLeague from "@/actions/deleteLeague";
+import { leaveLeague } from "@/actions/leaveLeague";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -8,45 +8,47 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { deleteLeagueFormSchema } from "@/db/formSchema";
+import { leaveLeagueFormSchema } from "@/db/formSchema";
+import { League } from "@/db/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Form } from "../ui/form";
-import { League } from "@/db/schema";
 
-export type LogActivityCardProps = {
+export type LeagueMemberActionsCardProps = {
   league: League;
 };
 
-const LeagueActionsCard: React.FC<LogActivityCardProps> = ({ league }) => {
-  const deleteForm = useForm<z.infer<typeof deleteLeagueFormSchema>>({
-    resolver: zodResolver(deleteLeagueFormSchema),
+const LeagueMemberActionsCard: React.FC<LeagueMemberActionsCardProps> = ({
+  league,
+}) => {
+  const leaveForm = useForm<z.infer<typeof leaveLeagueFormSchema>>({
+    resolver: zodResolver(leaveLeagueFormSchema),
     defaultValues: {
-      id: league.id,
+      leagueId: league.id,
     },
   });
 
   const onSubmitDelete = async (
-    data: z.infer<typeof deleteLeagueFormSchema>
+    data: z.infer<typeof leaveLeagueFormSchema>
   ) => {
-    await deleteLeague(data);
+    await leaveLeague(data);
   };
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>League Actions</CardTitle>
+        <CardTitle>League Actions (Member)</CardTitle>
       </CardHeader>
       <CardContent>
-        <Form {...deleteForm}>
+        <Form {...leaveForm}>
           <form
-            onSubmit={deleteForm.handleSubmit(onSubmitDelete)}
+            onSubmit={leaveForm.handleSubmit(onSubmitDelete)}
             className="space-y-4"
           >
             <Button variant={"destructive"} type="submit">
-              Delete
+              Leave League
             </Button>
           </form>
         </Form>
@@ -60,4 +62,4 @@ const LeagueActionsCard: React.FC<LogActivityCardProps> = ({ league }) => {
   );
 };
 
-export default LeagueActionsCard;
+export default LeagueMemberActionsCard;
