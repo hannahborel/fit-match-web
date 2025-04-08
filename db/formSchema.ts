@@ -37,6 +37,11 @@ export const updateLeagueFormSchema = createUpdateSchema(leagues, {
   id: defaultRequiredTextField,
 });
 
+export const kickUserFromLeagueFormSchema = z.object({
+  leagueId: defaultRequiredTextField,
+  userId: defaultRequiredTextField,
+});
+
 export const joinLeagueFormSchema = z.object({
   leagueSlug: defaultRequiredTextField,
 });

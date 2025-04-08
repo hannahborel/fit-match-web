@@ -1,9 +1,10 @@
 "use server";
 import { db } from "@/db/db";
-import { leaguesToUsers } from "@/db/schema";
+import { leagues, leaguesToUsers } from "@/db/schema";
 import { insertMatches } from "@/db/util/generateMatches";
 import { getBots, getLeagueById } from "@/db/utils";
 import { auth } from "@clerk/nextjs/server";
+import { eq } from "drizzle-orm";
 
 const startLeague = async (leagueId: string) => {
   const { userId } = await auth();
@@ -14,6 +15,9 @@ const startLeague = async (leagueId: string) => {
     throw new Error("League ID is required");
   }
   const league = await getLeagueById(leagueId);
+  if (league?.ownerId !== userId) {
+    throw new Error("You are not the owner of this league");
+  }
   if (!league) {
     throw new Error("League not found");
   }
@@ -27,6 +31,13 @@ const startLeague = async (leagueId: string) => {
     );
   }
   await insertMatches(league);
+  league.startDate = new Date(Date.now() + 1000 * 60 * 60 * 24); // Set start date to one day in the future
+  await db
+    .update(leagues)
+    .set({
+      startDate: league.startDate,
+    })
+    .where(eq(leagues.id, leagueId)); // Ensure 'leagues' is imported from the schema
 };
 
 export default startLeague;

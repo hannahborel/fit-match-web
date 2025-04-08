@@ -9,13 +9,16 @@ import {
 import { LoggedActivity } from "@/db/schema";
 import React from "react";
 import LoggedActivitiesTable from "../tables/LoggedActivitiesTable";
+import { UserJSON } from "@clerk/nextjs/server";
 
 export type LoggedActivitiesCardProps = {
   loggedActivities: LoggedActivity[];
+  leagueMembersMap: Map<string, UserJSON>;
 };
 
 const LoggedActivitiesCard: React.FC<LoggedActivitiesCardProps> = ({
   loggedActivities,
+  leagueMembersMap,
 }) => {
   return (
     <Card>
@@ -23,7 +26,10 @@ const LoggedActivitiesCard: React.FC<LoggedActivitiesCardProps> = ({
         <CardTitle>League Activity Feed</CardTitle>
       </CardHeader>
       <CardContent>
-        <LoggedActivitiesTable loggedActivities={loggedActivities} />
+        <LoggedActivitiesTable
+          loggedActivities={loggedActivities}
+          leagueMembersMap={leagueMembersMap}
+        />
       </CardContent>
       <CardFooter>
         <p className="text-sm text-gray-500">All Leagues in the system.</p>

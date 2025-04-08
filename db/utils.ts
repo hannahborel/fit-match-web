@@ -1,7 +1,27 @@
-import { auth } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { eq } from "drizzle-orm";
 import { db } from "./db";
-import { leagues, leaguesToUsers, loggedActivities, matches } from "./schema";
+import {
+  League,
+  leagues,
+  leaguesToUsers,
+  loggedActivities,
+  matches,
+} from "./schema";
+
+export const getUsersForLeague = async (league: League) => {
+  const userIds = (
+    await db.query.leaguesToUsers.findMany({
+      where: eq(leaguesToUsers.leagueId, league.id),
+    })
+  ).map((user) => user.userId);
+  const userResponse = await (
+    await clerkClient()
+  ).users.getUserList({
+    userId: userIds,
+  });
+  return userResponse.data;
+};
 
 export const getCurrentLeague = async () => {
   const { userId } = await auth();
