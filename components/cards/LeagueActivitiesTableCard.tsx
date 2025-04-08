@@ -7,9 +7,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { LoggedActivity } from "@/db/schema";
+import { UserJSON } from "@clerk/nextjs/server";
 import React from "react";
 import LoggedActivitiesTable from "../tables/LoggedActivitiesTable";
-import { UserJSON } from "@clerk/nextjs/server";
 
 export type LoggedActivitiesCardProps = {
   loggedActivities: LoggedActivity[];
