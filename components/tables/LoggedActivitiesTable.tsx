@@ -7,12 +7,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { LoggedActivity } from "@/db/schema";
-import { UserJSON } from "@clerk/nextjs/server";
+import { FitMatchUser } from "@/types/types";
 import React from "react";
 
 export type LoggedActivitiesTableProps = {
   loggedActivities: LoggedActivity[];
-  leagueMembersMap: Map<string, UserJSON>;
+  leagueMembersMap: Map<string, FitMatchUser>;
 };
 const LoggedActivitiesTable: React.FC<LoggedActivitiesTableProps> = ({
   loggedActivities,
@@ -40,8 +40,8 @@ const LoggedActivitiesTable: React.FC<LoggedActivitiesTableProps> = ({
           <TableRow key={activity.id}>
             <TableCell>{activity.userId}</TableCell>
             <TableCell>
-              {leagueMembersMap.get(activity.userId)?.first_name}{" "}
-              {leagueMembersMap.get(activity.userId)?.last_name}
+              {leagueMembersMap.get(activity.userId)?.firstName}{" "}
+              {leagueMembersMap.get(activity.userId)?.lastName}
             </TableCell>
             <TableCell>{activity.matchId}</TableCell>
             <TableCell>{activity.activityType}</TableCell>

@@ -1,7 +1,9 @@
+import { FitMatchUser } from "@/types/types";
 import { auth, clerkClient } from "@clerk/nextjs/server";
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import { db } from "./db";
 import {
+  bots,
   League,
   leagues,
   leaguesToUsers,
@@ -10,17 +12,59 @@ import {
 } from "./schema";
 
 export const getUsersForLeague = async (league: League) => {
-  const userIds = (
-    await db.query.leaguesToUsers.findMany({
-      where: eq(leaguesToUsers.leagueId, league.id),
+  const userIds = league.leaguesToUsers
+    .filter((leagueToUser) => !leagueToUser.isBot)
+    .map((user) => user.userId);
+  const userResponse = (
+    await (
+      await clerkClient()
+    ).users.getUserList({
+      userId: userIds,
     })
-  ).map((user) => user.userId);
-  const userResponse = await (
-    await clerkClient()
-  ).users.getUserList({
-    userId: userIds,
+  ).data.map(
+    (user) =>
+      ({
+        firstName: user.firstName,
+        lastName: user.lastName,
+        id: user.id,
+        imageUrl: user.imageUrl,
+        username: user.username,
+      } as FitMatchUser)
+  );
+  const botIds = league.leaguesToUsers
+    .filter((leagueToUser) => leagueToUser.isBot)
+    .map((user) => user.userId);
+  const botsResponse = await db.query.bots.findMany({
+    where: inArray(bots.id, botIds),
   });
-  return userResponse.data;
+  return userResponse.concat(botsResponse);
+};
+
+export const getMemberUsersForLeague = async (league: League) => {
+  const userIds = league.leaguesToUsers
+    .filter((leagueToUser) => !leagueToUser.isBot)
+    .filter((leagueToUser) => leagueToUser.userId !== league.ownerId)
+    .map((user) => user.userId);
+  if (userIds.length === 0) {
+    return [];
+  }
+  const userResponse = (
+    await (
+      await clerkClient()
+    ).users.getUserList({
+      userId: userIds,
+    })
+  ).data.map(
+    (user) =>
+      ({
+        firstName: user.firstName,
+        lastName: user.lastName,
+        id: user.id,
+        imageUrl: user.imageUrl,
+        username: user.username,
+      } as FitMatchUser)
+  );
+  return userResponse;
 };
 
 export const getCurrentLeague = async () => {
@@ -123,6 +167,5 @@ export const getBots = async (count: number) => {
     const j = Math.floor(Math.random() * (i + 1));
     [bots[i], bots[j]] = [bots[j], bots[i]];
   }
-  bots.slice(0, count);
-  return bots;
+  return bots.slice(0, count);
 };

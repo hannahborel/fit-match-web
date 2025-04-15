@@ -5,21 +5,30 @@ import LeagueMemberActionsCard from "@/components/cards/LeagueMemberActionsCard"
 import LeagueMembersCard from "@/components/cards/LeagueMembersCard";
 import LeagueOwnerActionsCard from "@/components/cards/LeagueOwnerActionsCard";
 import LeaguesTableCard from "@/components/cards/LeaguesTableCard";
+import LeagueStandingsCard from "@/components/cards/LeagueStandingsCard";
 import LogActivityCard from "@/components/cards/LogActivityCard";
-import { getCurrentLeague, getLeagues, getUsersForLeague } from "@/db/utils";
-import { auth, User, UserJSON } from "@clerk/nextjs/server";
+import {
+  getCurrentLeague,
+  getLeagues,
+  getMemberUsersForLeague,
+  getUsersForLeague,
+} from "@/db/utils";
+import { FitMatchUser } from "@/types/types";
+import { auth } from "@clerk/nextjs/server";
 
 const DevTools = async () => {
   const currentLeague = await getCurrentLeague();
   const { userId } = await auth();
   const leagues = await getLeagues();
-  const usersInCurrentLeague: User[] = currentLeague
+  const usersInCurrentLeague: FitMatchUser[] = currentLeague
     ? await getUsersForLeague(currentLeague)
     : [];
-
-  const leagueMembersMap = new Map<string, UserJSON>();
+  const memberUsersForLeague = currentLeague
+    ? await getMemberUsersForLeague(currentLeague)
+    : [];
+  const leagueMembersMap = new Map<string, FitMatchUser>();
   usersInCurrentLeague.forEach((user) => {
-    leagueMembersMap.set(user.id, user.raw as UserJSON);
+    leagueMembersMap.set(user.id, user);
   });
   return (
     <div className=" flex w-full p-8">
@@ -34,7 +43,10 @@ const DevTools = async () => {
         {!currentLeague && <JoinLeagueCard />}
         {!currentLeague && <LeaguesTableCard leagues={leagues} />}
         {currentLeague && currentLeague.ownerId == userId && (
-          <LeagueOwnerActionsCard league={currentLeague} />
+          <LeagueOwnerActionsCard
+            league={currentLeague}
+            leagueMembers={memberUsersForLeague}
+          />
         )}
         {currentLeague && currentLeague.ownerId !== userId && (
           <LeagueMemberActionsCard league={currentLeague} />
@@ -48,9 +60,13 @@ const DevTools = async () => {
         {currentLeague && (
           <LeagueMembersCard
             league={currentLeague}
-            leagueMembers={
-              usersInCurrentLeague.map((user) => user.raw) as UserJSON[]
-            }
+            leagueMembers={usersInCurrentLeague}
+          />
+        )}
+        {currentLeague && (
+          <LeagueStandingsCard
+            league={currentLeague}
+            leagueMembers={usersInCurrentLeague}
           />
         )}
       </div>

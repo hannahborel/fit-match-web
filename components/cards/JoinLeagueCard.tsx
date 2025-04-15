@@ -37,8 +37,6 @@ const JoinLeagueCard: React.FC = () => {
     form.reset();
   };
 
-  console.log(form.formState.errors);
-
   return (
     <Card>
       <CardHeader>

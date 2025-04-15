@@ -62,7 +62,6 @@ const LogActivityCard: React.FC<LogActivityCardProps> = ({
   };
 
   const activityType = form.watch("activityType");
-  console.log(form.formState.errors);
   return (
     <Card>
       <CardHeader>

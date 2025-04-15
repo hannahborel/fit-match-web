@@ -9,30 +9,24 @@ import {
 import { League } from "@/db/schema";
 import { FitMatchUser } from "@/types/types";
 import React from "react";
+import LeagueStandingsTable from "../tables/LeagueStandingsTable";
 
-export type LeagueMembersCardProps = {
+export type CurrentMatchCardProps = {
   league: League;
   leagueMembers: FitMatchUser[];
 };
 
-const LeagueMembersCard: React.FC<LeagueMembersCardProps> = ({
+const CurrentMatchCard: React.FC<CurrentMatchCardProps> = ({
   league,
   leagueMembers,
 }) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>League Members</CardTitle>
+        <CardTitle>League Standings</CardTitle>
       </CardHeader>
       <CardContent>
-        {leagueMembers.map((member, i) => (
-          <div key={i} className="">
-            <span>
-              {member.firstName} {member.lastName}
-              {league.ownerId === member.username && " (Owner)"}
-            </span>
-          </div>
-        ))}
+        <LeagueStandingsTable league={league} leagueMembers={leagueMembers} />
       </CardContent>
       <CardFooter>
         <p className="text-sm text-gray-500">
@@ -43,4 +37,4 @@ const LeagueMembersCard: React.FC<LeagueMembersCardProps> = ({
   );
 };
 
-export default LeagueMembersCard;
+export default CurrentMatchCard;

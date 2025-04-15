@@ -13,10 +13,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import FormDateField from "../formFields/formDateField";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -40,8 +40,6 @@ const CreateLeagueCard: React.FC = () => {
     form.reset();
   };
 
-  console.log(form.formState.errors);
-
   return (
     <Card>
       <CardHeader>
@@ -59,9 +57,6 @@ const CreateLeagueCard: React.FC = () => {
                   <FormControl>
                     <Input type="text" {...field} />
                   </FormControl>
-                  <FormDescription>
-                    Enter the name of the league.
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -75,9 +70,6 @@ const CreateLeagueCard: React.FC = () => {
                   <FormControl>
                     <Input type="text" {...field} />
                   </FormControl>
-                  <FormDescription>
-                    Enter a description for the league.
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -91,9 +83,6 @@ const CreateLeagueCard: React.FC = () => {
                   <FormControl>
                     <Input type="number" {...field} />
                   </FormControl>
-                  <FormDescription>
-                    Enter the number of weeks the league will run for.
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -107,13 +96,11 @@ const CreateLeagueCard: React.FC = () => {
                   <FormControl>
                     <Input type="number" {...field} />
                   </FormControl>
-                  <FormDescription>
-                    Enter the size of the league.
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
+            <FormDateField name={"startDate"} label={"Start Date"} />
             <Button type="submit">Submit</Button>
           </form>
         </Form>

@@ -15,7 +15,7 @@ export const leagues = pgTable("leagues", {
   ownerId: text().notNull(),
   size: integer().notNull(),
   weeks: integer().notNull(),
-  startDate: timestamp(),
+  startDate: timestamp().notNull(),
   slug: text().notNull().default(""),
   createdAt: timestamp().notNull().defaultNow(),
   updatedAt: timestamp().notNull().defaultNow(),
@@ -23,6 +23,7 @@ export const leagues = pgTable("leagues", {
 
 export type League = typeof leagues.$inferSelect & {
   leaguesToUsers: LeagueToUser[];
+  loggedActivities: LoggedActivity[];
 };
 export type InsertLeague = typeof leagues.$inferInsert;
 export type UpdateLeague = Omit<Partial<League>, "id"> & Pick<League, "id">;
@@ -78,6 +79,8 @@ export const leaguesToUsers = pgTable("leaguesToUsers", {
   leagueId: uuid().notNull(),
   userId: text().notNull(),
   isBot: boolean().notNull().default(false),
+  wins: integer().notNull().default(0),
+  losses: integer().notNull().default(0),
 });
 
 export type LeagueToUser = typeof leaguesToUsers.$inferSelect;
@@ -184,9 +187,10 @@ export type InsertActivityChallenge = typeof activityChallenges.$inferInsert;
 
 export const bots = pgTable("bots", {
   id: text().primaryKey().notNull(),
-  name: text().notNull(),
-  description: text().notNull(),
-  avatar: text().notNull(),
+  firstName: text().notNull(),
+  lastName: text().notNull(),
+  imageUrl: text().notNull(),
+  username: text().notNull(),
   activityAlgorithm: text().notNull(),
   createdAt: timestamp().notNull().defaultNow(),
   updatedAt: timestamp().notNull().defaultNow(),

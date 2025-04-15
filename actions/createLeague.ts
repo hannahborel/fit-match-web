@@ -2,7 +2,7 @@
 import { db } from "@/db/db";
 import { insertLeagueFormSchema } from "@/db/formSchema";
 import { InsertLeague, leagues, leaguesToUsers } from "@/db/schema";
-import { getLeagueById, getLeagueBySlug } from "@/db/utils";
+import { getBots, getLeagueBySlug } from "@/db/utils";
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import { generateSlug } from "random-word-slugs";
@@ -27,20 +27,31 @@ const createLeague: SubmitHandler<
     existingLeague = await getLeagueBySlug(slug);
   }
   insertLeague.slug = slug;
-  const insertedLeagueIds = await db
-    .insert(leagues)
-    .values(insertLeague as InsertLeague)
-    .returning({ id: leagues.id });
+  const league = (
+    await db
+      .insert(leagues)
+      .values(insertLeague as InsertLeague)
+      .returning()
+  )[0];
 
   const insertLeagueToUser = {
     userId: userId,
-    leagueId: insertedLeagueIds[0].id,
+    leagueId: league.id,
     isBot: false,
   };
-  await db.insert(leaguesToUsers).values(insertLeagueToUser);
+  await db.insert(leaguesToUsers).values(insertLeagueToUser).returning();
+  console.log(league.size - 1);
+  const bots = await getBots(league.size - 1);
+  await db.insert(leaguesToUsers).values(
+    bots.map((bot) => ({
+      userId: bot.id,
+      leagueId: league.id,
+      isBot: true,
+    }))
+  );
 
   revalidatePath("/dev-tools");
-  return await getLeagueById(insertedLeagueIds[0].id);
+  return league;
 };
 
 export default createLeague;

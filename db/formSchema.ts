@@ -13,22 +13,23 @@ const defaultRequiredTextField = z
 
 const defaultRequiredNumberField = z.coerce.number();
 
-// const defaultRequiredDateField = z.coerce.date({
-//   required_error: "Select a date",
-//   invalid_type_error: "Enter a valid date",
-// });
+const defaultRequiredDateField = z.coerce.date({
+  required_error: "Select a date",
+  invalid_type_error: "Enter a valid date",
+});
 
-// const defaultOptionalDateField = z.coerce
-//   .date({
-//     invalid_type_error: "Enter a valid date",
-//   })
-//   .optional();
+const defaultOptionalDateField = z.coerce
+  .date({
+    invalid_type_error: "Enter a valid date",
+  })
+  .optional();
 
 export const insertLeagueFormSchema = createInsertSchema(leagues, {
   name: defaultRequiredTextField,
   description: defaultRequiredTextField,
   size: defaultRequiredNumberField,
   weeks: defaultRequiredNumberField,
+  startDate: defaultRequiredDateField,
   slug: z.string().optional(),
   ownerId: z.string().optional(),
 });

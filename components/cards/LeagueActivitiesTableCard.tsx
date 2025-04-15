@@ -7,13 +7,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { LoggedActivity } from "@/db/schema";
-import { UserJSON } from "@clerk/nextjs/server";
+import { FitMatchUser } from "@/types/types";
 import React from "react";
 import LoggedActivitiesTable from "../tables/LoggedActivitiesTable";
 
 export type LoggedActivitiesCardProps = {
   loggedActivities: LoggedActivity[];
-  leagueMembersMap: Map<string, UserJSON>;
+  leagueMembersMap: Map<string, FitMatchUser>;
 };
 
 const LoggedActivitiesCard: React.FC<LoggedActivitiesCardProps> = ({

@@ -2,26 +2,13 @@
 import deleteLeague from "@/actions/deleteLeague";
 import kickUserFromLeague from "@/actions/kickUserFromLeague";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   deleteLeagueFormSchema,
   kickUserFromLeagueFormSchema,
 } from "@/db/formSchema";
 import { League } from "@/db/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@radix-ui/react-select";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -34,13 +21,23 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { FitMatchUser } from "@/types/types";
 
 export type LeagueOwnerActionsCardProps = {
   league: League;
+  leagueMembers: FitMatchUser[];
 };
 
 const LeagueOwnerActionsCard: React.FC<LeagueOwnerActionsCardProps> = ({
   league,
+  leagueMembers,
 }) => {
   const kickForm = useForm<z.infer<typeof kickUserFromLeagueFormSchema>>({
     resolver: zodResolver(kickUserFromLeagueFormSchema),
@@ -73,7 +70,7 @@ const LeagueOwnerActionsCard: React.FC<LeagueOwnerActionsCardProps> = ({
       <CardHeader>
         <CardTitle>League Actions (Owner)</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-4">
         <Form {...kickForm}>
           <form
             onSubmit={kickForm.handleSubmit(onSubmitKick)}
@@ -95,13 +92,13 @@ const LeagueOwnerActionsCard: React.FC<LeagueOwnerActionsCardProps> = ({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="m@example.com">
-                        m@example.com
-                      </SelectItem>
-                      <SelectItem value="m@google.com">m@google.com</SelectItem>
-                      <SelectItem value="m@support.com">
-                        m@support.com
-                      </SelectItem>
+                      {leagueMembers.map((user) => {
+                        return (
+                          <SelectItem key={user.id} value={user.id}>
+                            {user.firstName} {user.lastName}
+                          </SelectItem>
+                        );
+                      })}
                     </SelectContent>
                   </Select>
                   <FormDescription>
@@ -122,17 +119,16 @@ const LeagueOwnerActionsCard: React.FC<LeagueOwnerActionsCardProps> = ({
             onSubmit={deleteForm.handleSubmit(onSubmitDelete)}
             className="space-y-4"
           >
+            <FormLabel>Delete League</FormLabel>
+            <FormDescription>
+              Delete this league. This action cannot be undone.
+            </FormDescription>
             <Button variant={"destructive"} type="submit">
               Delete
             </Button>
           </form>
         </Form>
       </CardContent>
-      <CardFooter>
-        <p className="text-sm text-gray-500">
-          Fill in the details to log your activity.
-        </p>
-      </CardFooter>
     </Card>
   );
 };
