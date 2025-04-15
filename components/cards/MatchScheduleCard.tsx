@@ -37,5 +37,4 @@ const CurrentMatchCard: React.FC<CurrentMatchCardProps> = ({
   );
 };
 
-// testing
 export default CurrentMatchCard;
