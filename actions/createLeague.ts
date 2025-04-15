@@ -40,7 +40,6 @@ const createLeague: SubmitHandler<
     isBot: false,
   };
   await db.insert(leaguesToUsers).values(insertLeagueToUser).returning();
-  console.log(league.size - 1);
   const bots = await getBots(league.size - 1);
   await db.insert(leaguesToUsers).values(
     bots.map((bot) => ({
