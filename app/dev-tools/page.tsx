@@ -7,6 +7,7 @@ import LeagueOwnerActionsCard from "@/components/cards/LeagueOwnerActionsCard";
 import LeaguesTableCard from "@/components/cards/LeaguesTableCard";
 import LeagueStandingsCard from "@/components/cards/LeagueStandingsCard";
 import LogActivityCard from "@/components/cards/LogActivityCard";
+import MatchScheduleCard from "@/components/cards/MatchScheduleCard";
 import {
   getCurrentLeague,
   getLeagues,
@@ -68,6 +69,9 @@ const DevTools = async () => {
             league={currentLeague}
             leagueMembers={usersInCurrentLeague}
           />
+        )}
+        {currentLeague && (
+          <MatchScheduleCard league={currentLeague} leagueMembersMap={leagueMembersMap}/>
         )}
       </div>
     </div>

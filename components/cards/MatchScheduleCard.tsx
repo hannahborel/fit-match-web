@@ -1,40 +1,60 @@
 "use client";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { League } from "@/db/schema";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { League, Match } from "@/db/schema";
 import { FitMatchUser } from "@/types/types";
 import React from "react";
-import LeagueStandingsTable from "../tables/LeagueStandingsTable";
 
-export type CurrentMatchCardProps = {
+export type MatchScheduleCardProps = {
   league: League;
-  leagueMembers: FitMatchUser[];
+  leagueMembersMap: Map<string, FitMatchUser>;
 };
 
-const CurrentMatchCard: React.FC<CurrentMatchCardProps> = ({
+const buildMatchString = (
+  match: Match,
+  leagueMembersMap: Map<string, FitMatchUser>
+) => {
+  let matchString = "Match Week " + (match.week + 1) + ": ";
+  const teams = new Map<number, FitMatchUser[]>();
+  match.matchesToUsers.forEach((matchToUser) => {
+    if (!teams.get(matchToUser.teamIndex)) {
+      teams.set(matchToUser.teamIndex, []);
+    }
+    teams
+      .get(matchToUser.teamIndex)
+      ?.push(leagueMembersMap.get(matchToUser.userId)!);
+  });
+  matchString += teams
+    .keys()
+    .map((key) =>
+      teams
+        .get(key)!
+        .map(
+          (user) =>
+            user.firstName + " " + user.lastName + (user.isBot ? " (Bot)" : "")
+        )
+        .join(",")
+    )
+    .toArray()
+    .join(" vs ");
+  return matchString;
+};
+
+const MatchScheduleCard: React.FC<MatchScheduleCardProps> = ({
   league,
-  leagueMembers,
+  leagueMembersMap,
 }) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>League Standings</CardTitle>
+        <CardTitle>Match Schedule</CardTitle>
       </CardHeader>
       <CardContent>
-        <LeagueStandingsTable league={league} leagueMembers={leagueMembers} />
+        {league.matches.map((match) => (
+          <p key={match.id}>{buildMatchString(match, leagueMembersMap)}</p>
+        ))}
       </CardContent>
-      <CardFooter>
-        <p className="text-sm text-gray-500">
-          Fill in the details to log your activity.
-        </p>
-      </CardFooter>
     </Card>
   );
 };
 
-export default CurrentMatchCard;
+export default MatchScheduleCard;

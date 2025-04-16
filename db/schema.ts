@@ -24,6 +24,7 @@ export const leagues = pgTable("leagues", {
 export type League = typeof leagues.$inferSelect & {
   leaguesToUsers: LeagueToUser[];
   loggedActivities: LoggedActivity[];
+  matches: Match[];
 };
 export type InsertLeague = typeof leagues.$inferInsert;
 export type UpdateLeague = Omit<Partial<League>, "id"> & Pick<League, "id">;
@@ -44,7 +45,9 @@ export const matches = pgTable("matches", {
   updatedAt: timestamp().notNull().defaultNow(),
 });
 
-export type Match = typeof matches.$inferSelect;
+export type Match = typeof matches.$inferSelect & {
+  matchesToUsers: MatchToUser[];
+};
 export type InsertMatch = typeof matches.$inferInsert;
 
 export const matchesRelations = relations(matches, ({ one, many }) => ({

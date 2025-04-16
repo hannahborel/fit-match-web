@@ -2,6 +2,7 @@
 import { db } from "@/db/db";
 import { insertLeagueFormSchema } from "@/db/formSchema";
 import { InsertLeague, leagues, leaguesToUsers } from "@/db/schema";
+import { insertMatches } from "@/db/util/insertMatches";
 import { getBots, getLeagueBySlug } from "@/db/utils";
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
@@ -34,6 +35,10 @@ const createLeague: SubmitHandler<
       .returning()
   )[0];
 
+  if (!league) {
+    throw new Error("Leage was not fully created");
+  }
+
   const insertLeagueToUser = {
     userId: userId,
     leagueId: league.id,
@@ -48,6 +53,8 @@ const createLeague: SubmitHandler<
       isBot: true,
     }))
   );
+
+  await insertMatches(league.id);
 
   revalidatePath("/dev-tools");
   return league;

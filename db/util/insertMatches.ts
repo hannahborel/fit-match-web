@@ -2,12 +2,13 @@ import { db } from "../db";
 import {
   InsertMatch,
   InsertMatchToUser,
-  League,
   matches,
   matchesToUsers,
 } from "../schema";
+import { getLeagueById } from "../utils";
 
-export const insertMatches = async (league: League) => {
+export const insertMatches = async (leagueId: string) => {
+  const league = await getLeagueById(leagueId);
   const teamsPerMatch = 2;
   const usersPerMatch = 4;
   for (let i = 0; i < league.weeks; i++) {
@@ -29,10 +30,10 @@ export const insertMatches = async (league: League) => {
     for (let j = 0; j < shuffledUsers.length; j += usersPerMatch) {
       const matchUsers = shuffledUsers
         .slice(j, j + usersPerMatch)
-        .map((user) => ({
+        .map((user, index) => ({
           matchId: insertedMatches[Math.floor(j / usersPerMatch)].id,
           userId: user.userId,
-          teamIndex: Math.floor(j / teamsPerMatch),
+          teamIndex: index % teamsPerMatch, // Alternate users between teams
         }));
       insertMatchesToUsers.push(...matchUsers);
     }

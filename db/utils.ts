@@ -29,6 +29,7 @@ export const getUsersForLeague = async (league: League) => {
         id: user.id,
         imageUrl: user.imageUrl,
         username: user.username,
+        isBot: false,
       } as FitMatchUser)
   );
   const botIds = league.leaguesToUsers
@@ -37,7 +38,9 @@ export const getUsersForLeague = async (league: League) => {
   const botsResponse = await db.query.bots.findMany({
     where: inArray(bots.id, botIds),
   });
-  return userResponse.concat(botsResponse);
+  return userResponse.concat(
+    botsResponse.map((bot) => ({ ...bot, isBot: true }))
+  );
 };
 
 export const getMemberUsersForLeague = async (league: League) => {
@@ -86,15 +89,19 @@ export const getLeagueById = async (id: string) => {
   if (!userId) {
     throw new Error("You must be signed in");
   }
-  return await db.query.leagues.findFirst({
+  const league = await db.query.leagues.findFirst({
     where: eq(leagues.id, id),
     with: {
       leaguesToUsers: true,
       loggedActivities: true,
-      matches: true,
+      matches: { with: { matchesToUsers: true } },
       messages: true,
     },
   });
+  if (!league) {
+    throw new Error("League not found with this ID");
+  }
+  return league;
 };
 
 export const getLeagueBySlug = async (slug: string) => {
@@ -122,7 +129,7 @@ export const getLeagues = async () => {
     with: {
       leaguesToUsers: true,
       loggedActivities: true,
-      matches: true,
+      matches: { with: { matchesToUsers: true } },
       messages: true,
     },
   });

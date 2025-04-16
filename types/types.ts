@@ -10,5 +10,6 @@ export type FitMatchUser = {
   username: string;
   firstName: string;
   lastName: string;
-  imageUrl: string ;
-}
+  imageUrl: string;
+  isBot: boolean;
+};
