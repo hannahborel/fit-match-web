@@ -6,27 +6,38 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { League } from "@/db/schema";
+import { Match } from "@/db/schema";
 import { FitMatchUser } from "@/types/types";
 import React from "react";
-import LeagueStandingsTable from "../tables/LeagueStandingsTable";
 
 export type CurrentMatchCardProps = {
-  league: League;
-  leagueMembers: FitMatchUser[];
+  match: Match;
+  leagueMembersMap: Map<string, FitMatchUser>;
 };
 
 const CurrentMatchCard: React.FC<CurrentMatchCardProps> = ({
-  league,
-  leagueMembers,
+  match,
+  leagueMembersMap,
 }) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>League Standings</CardTitle>
+        <CardTitle>Current Match</CardTitle>
       </CardHeader>
       <CardContent>
-        <LeagueStandingsTable league={league} leagueMembers={leagueMembers} />
+        <span>Participants</span>
+        {match.matchesToUsers.map((matchToUser) => {
+          const user = leagueMembersMap.get(matchToUser.userId);
+          if (!user) {
+            return <span key={matchToUser.userId}>User not found</span>;
+          }
+          return (
+            <span key={matchToUser.userId}>
+              {user.firstName} {user.lastName} - Team{" "}
+              {matchToUser.teamIndex + 1}
+            </span>
+          );
+        })}
       </CardContent>
       <CardFooter>
         <p className="text-sm text-gray-500">

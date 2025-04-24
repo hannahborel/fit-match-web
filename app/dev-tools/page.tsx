@@ -1,4 +1,5 @@
 import CreateLeagueCard from "@/components/cards/CreateLeagueCard";
+import CurrentMatchCard from "@/components/cards/CurrentMatchCard";
 import JoinLeagueCard from "@/components/cards/JoinLeagueCard";
 import LoggedActivitiesCard from "@/components/cards/LeagueActivitiesTableCard";
 import LeagueMemberActionsCard from "@/components/cards/LeagueMemberActionsCard";
@@ -42,7 +43,7 @@ const DevTools = async () => {
         )}
         {!currentLeague && <CreateLeagueCard />}
         {!currentLeague && <JoinLeagueCard />}
-        {!currentLeague && <LeaguesTableCard leagues={leagues} />}
+        <LeaguesTableCard leagues={leagues} />
         {currentLeague && currentLeague.ownerId == userId && (
           <LeagueOwnerActionsCard
             league={currentLeague}
@@ -71,7 +72,24 @@ const DevTools = async () => {
           />
         )}
         {currentLeague && (
-          <MatchScheduleCard league={currentLeague} leagueMembersMap={leagueMembersMap}/>
+          <MatchScheduleCard
+            league={currentLeague}
+            leagueMembersMap={leagueMembersMap}
+          />
+        )}
+        {currentLeague && (
+          <CurrentMatchCard
+            match={
+              currentLeague.matches.filter(
+                (match) =>
+                  match.week == 0 &&
+                  match.matchesToUsers
+                    .map((matchToUser) => matchToUser.userId)
+                    .includes(userId ?? "")
+              )[0]
+            }
+            leagueMembersMap={leagueMembersMap}
+          />
         )}
       </div>
     </div>

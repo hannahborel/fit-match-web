@@ -17,6 +17,7 @@ const LeaguesTable: React.FC<LeaguesTableProps> = ({ leagues }) => {
     <Table>
       <TableHeader>
         <TableRow>
+          <TableHead>League ID</TableHead>
           <TableHead>Name</TableHead>
           <TableHead>Description</TableHead>
           <TableHead>Owner</TableHead>
@@ -29,6 +30,7 @@ const LeaguesTable: React.FC<LeaguesTableProps> = ({ leagues }) => {
       <TableBody>
         {leagues.map((league) => (
           <TableRow key={league.id}>
+            <TableCell>{league.id}</TableCell>
             <TableCell>{league.name}</TableCell>
             <TableCell>{league.description}</TableCell>
             <TableCell>{league.ownerId}</TableCell>
