@@ -15,6 +15,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "../ui/sidebar";
+import { SignOutButton } from "@clerk/nextjs";
 
 const Navbar = () => {
   const navbarItems = [
@@ -23,7 +24,6 @@ const Navbar = () => {
     { title: "My Activities", url: "/", icon: Volleyball },
     { title: "My Stats", url: "/", icon: ChartBar },
     { title: "My Account", url: "/", icon: User },
-    { title: "Log Out", url: "/log-out", icon: LogOut },
   ];
   return (
     <Sidebar>
@@ -48,6 +48,16 @@ const Navbar = () => {
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild>
+              <SignOutButton>
+                <button className="flex items-center gap-2">
+                  <LogOut />
+                  <span>Log Out</span>
+                </button>
+              </SignOutButton>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
         </SidebarMenu>
       </SidebarContent>
     </Sidebar>
