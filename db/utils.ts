@@ -114,7 +114,7 @@ export const getLeagueBySlug = async (slug: string) => {
     with: {
       leaguesToUsers: true,
       loggedActivities: true,
-      matches: true,
+      matches: { with: { matchesToUsers: true } },
       messages: true,
     },
   });
