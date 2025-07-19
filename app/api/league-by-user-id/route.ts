@@ -5,10 +5,10 @@ export const GET = async () => {
   try {
     const league = await getCurrentLeague();
     if (league) {
-      return NextResponse.json({ hasLeague: true, league });
+      return NextResponse.json({ league });
     } else {
       console.log("No league found");
-      return NextResponse.json({ hasLeague: false });
+      return NextResponse.json(null);
     }
   } catch (error) {
     console.log("Auth Error:", error);
