@@ -9,8 +9,6 @@ export const POST = async (req: Request) => {
     const parsedBody = logActivityFormSchema.parse(body);
 
     const activity = await logActivity(parsedBody);
-    console.log("parsed body", parsedBody);
-    console.log("activity", activity);
 
     return NextResponse.json({ activity });
   } catch (error: any) {
