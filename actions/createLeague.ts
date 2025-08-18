@@ -3,7 +3,7 @@ import { db } from "@/db/db";
 import { insertLeagueFormSchema } from "@/db/formSchema";
 import { InsertLeague, leagues, leaguesToUsers } from "@/db/schema";
 import { insertMatches } from "@/db/util/insertMatches";
-import { getBots, getLeagueBySlug } from "@/db/utils";
+import { getLeagueBySlug } from "@/db/utils";
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import { generateSlug } from "random-word-slugs";
@@ -45,14 +45,14 @@ const createLeague: SubmitHandler<
     isBot: false,
   };
   await db.insert(leaguesToUsers).values(insertLeagueToUser).returning();
-  const bots = await getBots(league.size - 1);
-  await db.insert(leaguesToUsers).values(
-    bots.map((bot) => ({
-      userId: bot.id,
-      leagueId: league.id,
-      isBot: true,
-    }))
-  );
+  // const bots = await getBots(league.size - 1);
+  // await db.insert(leaguesToUsers).values(
+  //   bots.map((bot) => ({
+  //     userId: bot.id,
+  //     leagueId: league.id,
+  //     isBot: true,
+  //   }))
+  // );
 
   await insertMatches(league.id);
 
