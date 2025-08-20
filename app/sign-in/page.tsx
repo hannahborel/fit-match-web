@@ -13,9 +13,19 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import * as Clerk from "@clerk/elements/common";
 import * as SignIn from "@clerk/elements/sign-in";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 
 export default function SignInPage() {
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect");
+
+  useEffect(() => {
+    // Store the redirect URL in sessionStorage for use after authentication
+    if (redirect) {
+      sessionStorage.setItem("authRedirect", redirect);
+    }
+  }, [redirect]);
   return (
     <div className="grid w-full grow items-center px-4 sm:justify-center">
       <Suspense>
