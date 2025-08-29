@@ -36,6 +36,7 @@ export const insertLeagueFormSchema = createInsertSchema(leagues, {
 
 export const updateLeagueFormSchema = createUpdateSchema(leagues, {
   id: defaultRequiredTextField,
+  startDate: defaultOptionalDateField,
 });
 
 export const kickUserFromLeagueFormSchema = z.object({

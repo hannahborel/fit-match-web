@@ -104,6 +104,33 @@ export const getLeagueById = async (id: string) => {
   return league;
 };
 
+export const getLeagueByIdPublic = async (id: string) => {
+  const league = await db.query.leagues.findFirst({
+    where: eq(leagues.id, id),
+    with: {
+      leaguesToUsers: true,
+    },
+  });
+
+  if (!league) {
+    return null;
+  }
+
+  // Get the owner's name from Clerk
+  let ownerName = "League Manager";
+  try {
+    const owner = await (await clerkClient()).users.getUser(league.ownerId);
+    ownerName = owner.firstName || ownerName;
+  } catch (error) {
+    console.error("Error fetching owner name:", error);
+  }
+
+  return {
+    ...league,
+    ownerName,
+  };
+};
+
 export const getLeagueBySlug = async (slug: string) => {
   const { userId } = await auth();
   if (!userId) {

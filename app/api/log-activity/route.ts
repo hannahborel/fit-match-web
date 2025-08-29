@@ -10,8 +10,21 @@ export const POST = async (req: Request) => {
 
     const activity = await logActivity(parsedBody);
 
-    return NextResponse.json(activity);
-  } catch (error) {
-    return NextResponse.json({ error }, { status: 500 });
+    return NextResponse.json({ activity });
+  } catch (error: any) {
+    console.error("[logActivity error]", error);
+
+    return NextResponse.json(
+      {
+        error: {
+          name: error.name,
+          message: error.message,
+          stack:
+            process.env.NODE_ENV === "development" ? error.stack : undefined,
+          issues: error?.issues, // if it's a ZodError
+        },
+      },
+      { status: 500 }
+    );
   }
 };

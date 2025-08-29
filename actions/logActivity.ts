@@ -40,7 +40,8 @@ const logActivity: SubmitHandler<
   await db
     .insert(loggedActivities)
     .values(insertActivity as InsertLoggedActivity)
-    .returning({ id: loggedActivities.id });
+    .returning({ id: loggedActivities.id })
+    .then((result) => result[0]);
   revalidatePath("/dev-tools");
 };
 
