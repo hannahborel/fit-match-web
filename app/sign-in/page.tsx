@@ -17,6 +17,16 @@ import { Suspense, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 
 export default function SignInPage() {
+  return (
+    <div className="h-screen flex items-center justify-center bg-gradient-to-br from-slate-800 to-slate-900">
+      <Suspense>
+        <SignInContent />
+      </Suspense>
+    </div>
+  );
+}
+
+function SignInContent() {
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect");
 
@@ -26,29 +36,34 @@ export default function SignInPage() {
       sessionStorage.setItem("authRedirect", redirect);
     }
   }, [redirect]);
+
   return (
-    <div className="grid w-full grow items-center px-4 sm:justify-center">
-      <Suspense>
-        <SignIn.Root>
+    <SignIn.Root>
           <Clerk.Loading>
             {(isGlobalLoading) => (
               <>
                 <SignIn.Step name="start">
-                  <Card className="w-full sm:w-96">
-                    <CardHeader>
-                      <CardTitle>Sign in to FitMatch</CardTitle>
-                      <CardDescription>
+                  <Card
+                    className="w-full max-w-[800px] mx-auto bg-white/95 backdrop-blur-sm border-0 shadow-2xl shadow-black/30 rounded-2xl"
+                    style={{ minWidth: "350px" }}
+                  >
+                    <CardHeader className="text-center pb-6">
+                      <CardTitle className="text-2xl font-bold text-gray-900">
+                        Sign in to Hustle
+                      </CardTitle>
+                      <CardDescription className="text-gray-600 mt-2">
                         Welcome back! Please sign in to continue
                       </CardDescription>
                     </CardHeader>
-                    <CardContent className="grid gap-y-4">
+                    <CardContent className="grid gap-y-6 px-6">
                       <div className="grid grid-cols-1 gap-x-4">
                         <Clerk.Connection name="google" asChild>
                           <Button
-                            size="sm"
+                            size="lg"
                             variant="outline"
                             type="button"
                             disabled={isGlobalLoading}
+                            className="w-full py-3 border-2 border-gray-200 hover:border-gray-300 hover:bg-gray-50"
                           >
                             <Clerk.Loading scope="provider:google">
                               {(isLoading) =>
@@ -78,10 +93,13 @@ export default function SignInPage() {
                         <Clerk.FieldError className="block text-sm text-destructive" />
                       </Clerk.Field>
                     </CardContent>
-                    <CardFooter>
+                    <CardFooter className="px-6 pb-6">
                       <div className="grid w-full gap-y-4">
                         <SignIn.Action submit asChild>
-                          <Button disabled={isGlobalLoading}>
+                          <Button
+                            disabled={isGlobalLoading}
+                            className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+                          >
                             <Clerk.Loading>
                               {(isLoading) => {
                                 return isLoading ? (
@@ -94,7 +112,12 @@ export default function SignInPage() {
                           </Button>
                         </SignIn.Action>
 
-                        <Button variant="link" size="sm" asChild>
+                        <Button
+                          variant="link"
+                          size="sm"
+                          asChild
+                          className="text-blue-600 hover:text-blue-700"
+                        >
                           <Clerk.Link navigate="sign-up">
                             Don&apos;t have an account? Sign up
                           </Clerk.Link>
@@ -105,10 +128,12 @@ export default function SignInPage() {
                 </SignIn.Step>
 
                 <SignIn.Step name="choose-strategy">
-                  <Card className="w-full sm:w-96">
-                    <CardHeader>
-                      <CardTitle>Use another method</CardTitle>
-                      <CardDescription>
+                  <Card className="w-full max-w-2xl mx-auto bg-white/95 backdrop-blur-sm border-0 shadow-2xl shadow-black/30 rounded-2xl">
+                    <CardHeader className="text-center pb-6">
+                      <CardTitle className="text-2xl font-bold text-gray-900">
+                        Use another method
+                      </CardTitle>
+                      <CardDescription className="text-gray-600 mt-2">
                         Facing issues? You can use any of these methods to sign
                         in.
                       </CardDescription>
@@ -133,10 +158,13 @@ export default function SignInPage() {
                         </Button>
                       </SignIn.SupportedStrategy>
                     </CardContent>
-                    <CardFooter>
+                    <CardFooter className="px-6 pb-6">
                       <div className="grid w-full gap-y-4">
                         <SignIn.Action navigate="previous" asChild>
-                          <Button disabled={isGlobalLoading}>
+                          <Button
+                            disabled={isGlobalLoading}
+                            className="w-full py-3 bg-gray-600 hover:bg-gray-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+                          >
                             <Clerk.Loading>
                               {(isLoading) => {
                                 return isLoading ? (
@@ -155,17 +183,19 @@ export default function SignInPage() {
 
                 <SignIn.Step name="verifications">
                   <SignIn.Strategy name="password">
-                    <Card className="w-full sm:w-96">
-                      <CardHeader>
-                        <CardTitle>Check your email</CardTitle>
-                        <CardDescription>
+                    <Card className="w-full max-w-2xl mx-auto bg-white/95 backdrop-blur-sm border-0 shadow-2xl shadow-black/30 rounded-2xl">
+                      <CardHeader className="text-center pb-6">
+                        <CardTitle className="text-2xl font-bold text-gray-900">
+                          Check your email
+                        </CardTitle>
+                        <CardDescription className="text-gray-600 mt-2">
                           Enter the verification code sent to your email
                         </CardDescription>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-gray-600 mt-2">
                           Welcome back <SignIn.SafeIdentifier />
                         </p>
                       </CardHeader>
-                      <CardContent className="grid gap-y-4">
+                      <CardContent className="grid gap-y-6 px-6">
                         <Clerk.Field name="password" className="space-y-2">
                           <Clerk.Label asChild>
                             <Label>Password</Label>
@@ -176,10 +206,13 @@ export default function SignInPage() {
                           <Clerk.FieldError className="block text-sm text-destructive" />
                         </Clerk.Field>
                       </CardContent>
-                      <CardFooter>
+                      <CardFooter className="px-6 pb-6">
                         <div className="grid w-full gap-y-4">
                           <SignIn.Action submit asChild>
-                            <Button disabled={isGlobalLoading}>
+                            <Button
+                              disabled={isGlobalLoading}
+                              className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+                            >
                               <Clerk.Loading>
                                 {(isLoading) => {
                                   return isLoading ? (
@@ -192,7 +225,12 @@ export default function SignInPage() {
                             </Button>
                           </SignIn.Action>
                           <SignIn.Action navigate="choose-strategy" asChild>
-                            <Button type="button" size="sm" variant="link">
+                            <Button
+                              type="button"
+                              size="sm"
+                              variant="link"
+                              className="text-blue-600 hover:text-blue-700"
+                            >
                               Use another method
                             </Button>
                           </SignIn.Action>
@@ -202,17 +240,19 @@ export default function SignInPage() {
                   </SignIn.Strategy>
 
                   <SignIn.Strategy name="email_code">
-                    <Card className="w-full sm:w-96">
-                      <CardHeader>
-                        <CardTitle>Check your email</CardTitle>
-                        <CardDescription>
+                    <Card className="w-full max-w-2xl mx-auto bg-white/95 backdrop-blur-sm border-0 shadow-2xl shadow-black/30 rounded-2xl">
+                      <CardHeader className="text-center pb-6">
+                        <CardTitle className="text-2xl font-bold text-gray-900">
+                          Check your email
+                        </CardTitle>
+                        <CardDescription className="text-gray-600 mt-2">
                           Enter the verification code sent to your email
                         </CardDescription>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-gray-600 mt-2">
                           Welcome back <SignIn.SafeIdentifier />
                         </p>
                       </CardHeader>
-                      <CardContent className="grid gap-y-4">
+                      <CardContent className="grid gap-y-6 px-6">
                         <Clerk.Field name="code">
                           <Clerk.Label className="sr-only">
                             Email verification code
@@ -257,10 +297,13 @@ export default function SignInPage() {
                           </div>
                         </Clerk.Field>
                       </CardContent>
-                      <CardFooter>
+                      <CardFooter className="px-6 pb-6">
                         <div className="grid w-full gap-y-4">
                           <SignIn.Action submit asChild>
-                            <Button disabled={isGlobalLoading}>
+                            <Button
+                              disabled={isGlobalLoading}
+                              className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+                            >
                               <Clerk.Loading>
                                 {(isLoading) => {
                                   return isLoading ? (
@@ -273,7 +316,11 @@ export default function SignInPage() {
                             </Button>
                           </SignIn.Action>
                           <SignIn.Action navigate="choose-strategy" asChild>
-                            <Button size="sm" variant="link">
+                            <Button
+                              size="sm"
+                              variant="link"
+                              className="text-blue-600 hover:text-blue-700"
+                            >
                               Use another method
                             </Button>
                           </SignIn.Action>
@@ -286,7 +333,5 @@ export default function SignInPage() {
             )}
           </Clerk.Loading>
         </SignIn.Root>
-      </Suspense>
-    </div>
-  );
+      );
 }

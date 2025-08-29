@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Download, Smartphone, Globe, X } from "lucide-react";
+import { Smartphone, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface SmartAppBannerProps {
@@ -24,10 +24,6 @@ export default function SmartAppBanner({
   );
   const [isVisible, setIsVisible] = useState(true);
   const [isDetecting, setIsDetecting] = useState(true);
-
-  useEffect(() => {
-    detectAppInstallation();
-  }, []);
 
   const detectAppInstallation = async () => {
     setIsDetecting(true);
@@ -69,6 +65,10 @@ export default function SmartAppBanner({
       setIsDetecting(false);
     }
   };
+
+  useEffect(() => {
+    detectAppInstallation();
+  }, []);
 
   const checkIOSAppInstallation = async (): Promise<boolean> => {
     return new Promise((resolve) => {
