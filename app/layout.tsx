@@ -1,6 +1,7 @@
 import "@/app/globals.css";
 import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
+import { AuthRedirectHandler } from "@/components/auth/AuthRedirectHandler";
 
 export const metadata: Metadata = {
   title: "FitMatch",
@@ -21,6 +22,7 @@ export default async function RootLayout({
           signInForceRedirectUrl={"/dashboard"}
           signUpForceRedirectUrl={"/dashboard"}
         >
+          <AuthRedirectHandler />
           {children}
         </ClerkProvider>
       </body>
