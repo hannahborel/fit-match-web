@@ -1,8 +1,8 @@
 import { clerkMiddleware } from "@clerk/nextjs/server";
 
 export default clerkMiddleware({
-  // Make all API routes public
-  publicRoutes: ["/api(.*)"],
+  // Make specific API routes public that don't need auth
+  publicRoutes: ["/api/league-invite/(.*)", "/api/test-league/(.*)"],
 });
 
 export const config = {
