@@ -12,6 +12,22 @@ export const POST = async (req: Request) => {
 
     return NextResponse.json(league);
   } catch (error) {
+    // Handle specific error cases
+    if (error instanceof Error) {
+      if (error.message.includes("already have a league")) {
+        return NextResponse.json(
+          { error: error.message },
+          { status: 409 } // Conflict status code
+        );
+      }
+      if (error.message.includes("must be signed in")) {
+        return NextResponse.json(
+          { error: error.message },
+          { status: 401 } // Unauthorized status code
+        );
+      }
+    }
+
     return NextResponse.json({ error }, { status: 500 });
   }
 };

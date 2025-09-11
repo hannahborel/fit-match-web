@@ -79,9 +79,22 @@ export const getCurrentLeague = async () => {
     where: eq(leaguesToUsers.userId, userId),
   });
   if (!leagueToUser) {
+    console.log(`ℹ️ No leaguesToUsers record found for user: ${userId}`);
     return null;
   }
-  return getLeagueById(leagueToUser.leagueId);
+
+  console.log(
+    `🔍 Found leaguesToUsers record for user: ${userId}, leagueId: ${leagueToUser.leagueId}`
+  );
+  try {
+    return await getLeagueById(leagueToUser.leagueId);
+  } catch (error) {
+    console.error(
+      `❌ Error fetching league ${leagueToUser.leagueId} for user ${userId}:`,
+      error
+    );
+    throw error;
+  }
 };
 
 export const getLeagueById = async (id: string) => {
@@ -99,7 +112,12 @@ export const getLeagueById = async (id: string) => {
     },
   });
   if (!league) {
-    throw new Error("League not found with this ID");
+    // Enhanced error message for debugging data integrity issues
+    console.error(`❌ League not found with ID: ${id} for user: ${userId}`);
+    console.error(
+      "This may indicate a data integrity issue where leaguesToUsers references a non-existent league"
+    );
+    throw new Error(`League not found with this ID: ${id}`);
   }
   return league;
 };

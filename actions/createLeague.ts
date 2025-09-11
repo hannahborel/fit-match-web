@@ -5,6 +5,7 @@ import { InsertLeague, leagues, leaguesToUsers } from "@/db/schema";
 import { insertMatches } from "@/db/util/insertMatches";
 import { getLeagueBySlug } from "@/db/utils";
 import { auth } from "@clerk/nextjs/server";
+import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { generateSlug } from "random-word-slugs";
 import { SubmitHandler } from "react-hook-form";
@@ -16,6 +17,17 @@ const createLeague: SubmitHandler<
   const { userId } = await auth();
   if (!userId) {
     throw new Error("You must be signed in");
+  }
+
+  // Check if user already has a league
+  const existingLeagueToUser = await db.query.leaguesToUsers.findFirst({
+    where: eq(leaguesToUsers.userId, userId),
+  });
+
+  if (existingLeagueToUser) {
+    throw new Error(
+      "You already have a league. Users can only be in one league at a time."
+    );
   }
 
   const insertLeague = insertLeagueFormSchema.parse(data);
