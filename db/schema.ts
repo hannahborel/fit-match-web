@@ -75,6 +75,10 @@ export const matchesToUsersRelations = relations(matchesToUsers, ({ one }) => ({
     fields: [matchesToUsers.matchId],
     references: [matches.id],
   }),
+  user: one(users, {
+    fields: [matchesToUsers.userId],
+    references: [users.id],
+  }),
 }));
 
 export const leaguesToUsers = pgTable("leaguesToUsers", {
@@ -93,6 +97,10 @@ export const leaguesToUsersRelations = relations(leaguesToUsers, ({ one }) => ({
   league: one(leagues, {
     fields: [leaguesToUsers.leagueId],
     references: [leagues.id],
+  }),
+  user: one(users, {
+    fields: [leaguesToUsers.userId],
+    references: [users.id],
   }),
 }));
 
@@ -127,6 +135,10 @@ export const loggedActivitiesRelations = relations(
       fields: [loggedActivities.matchId],
       references: [matches.id],
     }),
+    user: one(users, {
+      fields: [loggedActivities.userId],
+      references: [users.id],
+    }),
     challenge: one(activityChallenges, {
       fields: [loggedActivities.id],
       references: [activityChallenges.activityId],
@@ -151,6 +163,10 @@ export const leagueMessagesRelations = relations(leagueMessages, ({ one }) => ({
     fields: [leagueMessages.leagueId],
     references: [leagues.id],
   }),
+  sender: one(users, {
+    fields: [leagueMessages.senderId],
+    references: [users.id],
+  }),
 }));
 
 export const matchMessages = pgTable("matchMessages", {
@@ -166,9 +182,13 @@ export type MatchMessage = typeof matchMessages.$inferSelect;
 export type InsertMatchMessage = typeof matchMessages.$inferInsert;
 
 export const matchMessagesRelations = relations(matchMessages, ({ one }) => ({
-  league: one(leagues, {
+  match: one(matches, {
     fields: [matchMessages.matchId],
-    references: [leagues.id],
+    references: [matches.id],
+  }),
+  sender: one(users, {
+    fields: [matchMessages.senderId],
+    references: [users.id],
   }),
 }));
 
@@ -187,6 +207,45 @@ export const activityChallenges = pgTable("activityChallenges", {
 
 export type ActivityChallenge = typeof activityChallenges.$inferSelect;
 export type InsertActivityChallenge = typeof activityChallenges.$inferInsert;
+
+export const activityChallengesRelations = relations(activityChallenges, ({ one }) => ({
+  league: one(leagues, {
+    fields: [activityChallenges.leagueId],
+    references: [leagues.id],
+  }),
+  user: one(users, {
+    fields: [activityChallenges.userId],
+    references: [users.id],
+  }),
+  activity: one(loggedActivities, {
+    fields: [activityChallenges.activityId],
+    references: [loggedActivities.id],
+  }),
+}));
+
+export const users = pgTable("users", {
+  id: text().primaryKey().notNull(), // Clerk user ID
+  firstName: text(),
+  lastName: text(),
+  email: text(),
+  imageUrl: text(),
+  username: text(),
+  createdAt: timestamp().notNull().defaultNow(),
+  updatedAt: timestamp().notNull().defaultNow(),
+});
+
+export type User = typeof users.$inferSelect;
+export type InsertUser = typeof users.$inferInsert;
+export type UpdateUser = Omit<Partial<User>, "id"> & Pick<User, "id">;
+
+export const usersRelations = relations(users, ({ many }) => ({
+  leagues: many(leaguesToUsers),
+  loggedActivities: many(loggedActivities),
+  leagueMessages: many(leagueMessages),
+  matchMessages: many(matchMessages),
+  activityChallenges: many(activityChallenges),
+  matches: many(matchesToUsers),
+}));
 
 export const bots = pgTable("bots", {
   id: text().primaryKey().notNull(),

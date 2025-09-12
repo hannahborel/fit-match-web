@@ -1,6 +1,5 @@
 import { getCurrentLeague } from "@/db/utils";
 import { auth } from "@clerk/nextjs/server";
-import { db } from "@/db/db";
 import { NextResponse } from "next/server";
 
 export const GET = async () => {
