@@ -208,20 +208,23 @@ export const activityChallenges = pgTable("activityChallenges", {
 export type ActivityChallenge = typeof activityChallenges.$inferSelect;
 export type InsertActivityChallenge = typeof activityChallenges.$inferInsert;
 
-export const activityChallengesRelations = relations(activityChallenges, ({ one }) => ({
-  league: one(leagues, {
-    fields: [activityChallenges.leagueId],
-    references: [leagues.id],
-  }),
-  user: one(users, {
-    fields: [activityChallenges.userId],
-    references: [users.id],
-  }),
-  activity: one(loggedActivities, {
-    fields: [activityChallenges.activityId],
-    references: [loggedActivities.id],
-  }),
-}));
+export const activityChallengesRelations = relations(
+  activityChallenges,
+  ({ one }) => ({
+    league: one(leagues, {
+      fields: [activityChallenges.leagueId],
+      references: [leagues.id],
+    }),
+    user: one(users, {
+      fields: [activityChallenges.userId],
+      references: [users.id],
+    }),
+    activity: one(loggedActivities, {
+      fields: [activityChallenges.activityId],
+      references: [loggedActivities.id],
+    }),
+  })
+);
 
 export const users = pgTable("users", {
   id: text().primaryKey().notNull(), // Clerk user ID
