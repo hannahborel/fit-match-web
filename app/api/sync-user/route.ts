@@ -2,16 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { syncUserFromClerk } from "@/lib/user-sync";
 
-export async function POST(req: NextRequest) {
+export async function POST(_req: NextRequest) {
   try {
     // Get the authenticated user
     const { userId } = await auth();
-    
+
     if (!userId) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Get user data from Clerk
@@ -24,8 +21,8 @@ export async function POST(req: NextRequest) {
       id: clerkUser.id,
       first_name: clerkUser.firstName,
       last_name: clerkUser.lastName,
-      email_addresses: clerkUser.emailAddresses.map(email => ({
-        email_address: email.emailAddress
+      email_addresses: clerkUser.emailAddresses.map((email) => ({
+        email_address: email.emailAddress,
       })),
       image_url: clerkUser.imageUrl,
     });
@@ -39,13 +36,10 @@ export async function POST(req: NextRequest) {
         lastName: clerkUser.lastName,
         email: clerkUser.emailAddresses[0]?.emailAddress,
         thumbnailUrl: clerkUser.imageUrl,
-      }
+      },
     });
   } catch (error) {
     console.error("Sync user error:", error);
-    return NextResponse.json(
-      { error: "Failed to sync user" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to sync user" }, { status: 500 });
   }
 }
