@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Smartphone, X } from "lucide-react";
@@ -25,7 +25,7 @@ export default function SmartAppBanner({
   const [isVisible, setIsVisible] = useState(true);
   const [isDetecting, setIsDetecting] = useState(true);
 
-  const detectAppInstallation = async () => {
+  const detectAppInstallation = useCallback(async () => {
     setIsDetecting(true);
 
     try {
@@ -64,11 +64,11 @@ export default function SmartAppBanner({
     } finally {
       setIsDetecting(false);
     }
-  };
+  }, [leagueId]);
 
   useEffect(() => {
     detectAppInstallation();
-  }, []);
+  }, [detectAppInstallation]);
 
   const checkIOSAppInstallation = async (): Promise<boolean> => {
     return new Promise((resolve) => {

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { syncUserFromClerk } from "@/lib/user-sync";
 
-export async function POST(_req: NextRequest) {
+export async function POST() {
   try {
     // Get the authenticated user
     const { userId } = await auth();
