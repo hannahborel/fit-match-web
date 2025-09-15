@@ -227,12 +227,14 @@ export const activityChallengesRelations = relations(
 );
 
 export const users = pgTable("users", {
-  id: text().primaryKey().notNull(), // Clerk user ID
-  firstName: text(),
-  lastName: text(),
-  email: text(),
-  imageUrl: text(),
-  username: text(),
+  id: text().primaryKey().notNull(), // Clerk user ID (clerkId)
+  firstName: text().notNull(), // Cached from Clerk
+  lastName: text(), // Cached from Clerk (optional)
+  email: text().notNull(), // Cached from Clerk
+  thumbnailUrl: text(), // App-specific data
+  points: integer().notNull().default(0), // App-specific data
+  isLeagueManager: boolean().notNull().default(false), // App-specific permission flag
+  lastSyncedAt: timestamp().notNull().defaultNow(), // For cache invalidation
   createdAt: timestamp().notNull().defaultNow(),
   updatedAt: timestamp().notNull().defaultNow(),
 });

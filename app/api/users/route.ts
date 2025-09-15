@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { clerkClient } from "@clerk/nextjs/server";
 import { auth } from "@clerk/nextjs/server";
+import { AppUser } from "@/types/types";
 
 export const POST = async (request: NextRequest) => {
   try {
@@ -24,13 +25,15 @@ export const POST = async (request: NextRequest) => {
       await clerkClient()
     ).users.getUserList({ userId: userIds });
 
-    const userData = users.data.map((user) => ({
-      userId: user.id,
+    const userData: AppUser[] = users.data.map((user) => ({
+      clerkId: user.id,
       firstName: user.firstName || "Unknown",
-      lastName: user.lastName || "",
-      imageUrl: user.imageUrl,
-      username: user.username,
-      isBot: false,
+      lastName: user.lastName || undefined,
+      email: user.emailAddresses[0]?.emailAddress || "",
+      thumbnailUrl: user.imageUrl || undefined,
+      points: 0, // Default points, should be fetched from database
+      isLeagueManager: false, // Default permission, should be fetched from database
+      lastSyncedAt: new Date(),
     }));
 
     return NextResponse.json({ users: userData });
