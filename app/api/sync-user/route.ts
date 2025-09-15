@@ -19,8 +19,8 @@ export async function POST() {
     // Sync user data to database
     const result = await syncUserFromClerk({
       id: clerkUser.id,
-      first_name: clerkUser.firstName,
-      last_name: clerkUser.lastName,
+      first_name: clerkUser.firstName || undefined,
+      last_name: clerkUser.lastName || undefined,
       email_addresses: clerkUser.emailAddresses.map((email) => ({
         email_address: email.emailAddress,
       })),
