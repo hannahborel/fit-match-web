@@ -1,5 +1,6 @@
 import CreateLeague from "@/actions/createLeague";
 import { insertLeagueFormSchema } from "@/db/formSchema";
+
 import { NextResponse } from "next/server";
 
 export const POST = async (req: Request) => {
