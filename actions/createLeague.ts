@@ -10,7 +10,6 @@ import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { generateSlug } from "random-word-slugs";
 import { SubmitHandler } from "react-hook-form";
-import z from "zod";
 
 const createLeague: SubmitHandler<CreateLeagueInput> = async (data) => {
   const { userId } = await auth();
