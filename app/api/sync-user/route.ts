@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { syncUserFromClerk } from "@/lib/user-sync";
+import { db } from "@/db/db";
+import { leaguesToUsers } from "@/db/schema";
+import { eq } from "drizzle-orm";
 
 export async function POST() {
   try {
@@ -26,6 +29,15 @@ export async function POST() {
       })),
       image_url: clerkUser.imageUrl,
     });
+
+    // Also update leaguesToUsers table with the new name
+    await db
+      .update(leaguesToUsers)
+      .set({
+        firstName: clerkUser.firstName || "Unknown",
+        lastName: clerkUser.lastName || null,
+      })
+      .where(eq(leaguesToUsers.userId, userId));
 
     return NextResponse.json({
       message: "User synced successfully",
