@@ -1,7 +1,7 @@
 "use server";
 import { db } from "@/db/db";
 import { insertLeagueFormSchema } from "@/db/formSchema";
-import { InsertLeague, leagues, leaguesToUsers } from "@/db/schema";
+import { InsertLeague, leagues, leaguesToUsers, users } from "@/db/schema";
 import { CreateLeagueInput } from "hustle-types";
 import { insertMatches } from "@/db/util/insertMatches";
 import { getLeagueBySlug } from "@/db/utils";
@@ -49,9 +49,17 @@ const createLeague: SubmitHandler<CreateLeagueInput> = async (data) => {
     throw new Error("Leage was not fully created");
   }
 
+  // Fetch user data to get firstName and lastName
+  const [user] = await db.select().from(users).where(eq(users.id, userId));
+  if (!user) {
+    throw new Error("User not found");
+  }
+
   const insertLeagueToUser = {
     userId: userId,
     leagueId: league.id,
+    firstName: user.firstName,
+    lastName: user.lastName,
     isBot: false,
   };
   await db.insert(leaguesToUsers).values(insertLeagueToUser).returning();
@@ -60,6 +68,8 @@ const createLeague: SubmitHandler<CreateLeagueInput> = async (data) => {
   //   bots.map((bot) => ({
   //     userId: bot.id,
   //     leagueId: league.id,
+  //     firstName: bot.firstName,
+  //     lastName: bot.lastName,
   //     isBot: true,
   //   }))
   // );
