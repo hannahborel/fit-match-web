@@ -5,6 +5,7 @@ import {
   leaguesToUsers,
   loggedActivities,
   matchesToUsers,
+  users,
 } from "@/db/schema";
 import { auth } from "@clerk/nextjs/server";
 import { and, eq } from "drizzle-orm";
@@ -25,6 +26,13 @@ export const addUserToLeague = async (userId: string, league: League) => {
   ) {
     throw new Error("User is already in league");
   }
+
+  // Fetch user data to get firstName and lastName
+  const [user] = await db.select().from(users).where(eq(users.id, userId));
+  if (!user) {
+    throw new Error("User not found");
+  }
+
   if (league.leaguesToUsers.length == league.size) {
     const botUser = league.leaguesToUsers.find(
       (leaguesToUser) => leaguesToUser.isBot
@@ -57,6 +65,8 @@ export const addUserToLeague = async (userId: string, league: League) => {
   await db.insert(leaguesToUsers).values({
     userId,
     leagueId: league.id,
+    firstName: user.firstName,
+    lastName: user.lastName,
     isBot: false,
   });
 };
