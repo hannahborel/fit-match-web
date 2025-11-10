@@ -2,16 +2,17 @@
 import { db } from "@/db/db";
 import { insertLeagueFormSchema } from "@/db/formSchema";
 import { InsertLeague, leagues, leaguesToUsers, users } from "@/db/schema";
-import { CreateLeagueInput } from "hustle-types";
 import { insertMatches } from "@/db/util/insertMatches";
 import { getLeagueBySlug } from "@/db/utils";
 import { auth } from "@clerk/nextjs/server";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { generateSlug } from "random-word-slugs";
-import { SubmitHandler } from "react-hook-form";
+import { z } from "zod";
 
-const createLeague: SubmitHandler<CreateLeagueInput> = async (data) => {
+type CreateLeagueInput = z.infer<typeof insertLeagueFormSchema>;
+
+const createLeague = async (data: CreateLeagueInput) => {
   const { userId } = await auth();
   if (!userId) {
     throw new Error("You must be signed in");
