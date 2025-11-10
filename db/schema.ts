@@ -85,6 +85,8 @@ export const leaguesToUsers = pgTable("leaguesToUsers", {
   id: uuid().primaryKey().defaultRandom(),
   leagueId: uuid().notNull(),
   userId: text().notNull(),
+  firstName: text().notNull(),
+  lastName: text(),
   isBot: boolean().notNull().default(false),
   wins: integer().notNull().default(0),
   losses: integer().notNull().default(0),
