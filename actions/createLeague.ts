@@ -2,7 +2,6 @@
 import { db } from "@/db/db";
 import { insertLeagueFormSchema } from "@/db/formSchema";
 import { InsertLeague, leagues, leaguesToUsers, users } from "@/db/schema";
-import { insertMatches } from "@/db/util/insertMatches";
 import { getLeagueBySlug } from "@/db/utils";
 import { auth } from "@clerk/nextjs/server";
 import { eq } from "drizzle-orm";
@@ -64,18 +63,9 @@ const createLeague = async (data: CreateLeagueInput) => {
     isBot: false,
   };
   await db.insert(leaguesToUsers).values(insertLeagueToUser).returning();
-  // const bots = await getBots(league.size - 1);
-  // await db.insert(leaguesToUsers).values(
-  //   bots.map((bot) => ({
-  //     userId: bot.id,
-  //     leagueId: league.id,
-  //     firstName: bot.firstName,
-  //     lastName: bot.lastName,
-  //     isBot: true,
-  //   }))
-  // );
 
-  await insertMatches(league.id);
+  // Matches will be generated when the league fills up or starts
+  // No longer generating matches at creation time
 
   revalidatePath("/dev-tools");
   return league;

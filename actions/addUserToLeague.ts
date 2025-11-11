@@ -1,14 +1,9 @@
 "use server";
 import { db } from "@/db/db";
-import {
-  League,
-  leaguesToUsers,
-  loggedActivities,
-  matchesToUsers,
-  users,
-} from "@/db/schema";
+import { League, leaguesToUsers, users } from "@/db/schema";
+import { insertMatches } from "@/db/util/insertMatches";
 import { auth } from "@clerk/nextjs/server";
-import { and, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 
 export const addUserToLeague = async (userId: string, league: League) => {
   const { userId: loggedInUserId } = await auth();
@@ -33,35 +28,12 @@ export const addUserToLeague = async (userId: string, league: League) => {
     throw new Error("User not found");
   }
 
-  if (league.leaguesToUsers.length == league.size) {
-    const botUser = league.leaguesToUsers.find(
-      (leaguesToUser) => leaguesToUser.isBot
-    );
-    if (botUser) {
-      await db
-        .delete(leaguesToUsers)
-        .where(
-          and(
-            eq(leaguesToUsers.userId, botUser.userId),
-            eq(leaguesToUsers.leagueId, league.id)
-          )
-        );
-      await db
-        .update(matchesToUsers)
-        .set({
-          userId,
-        })
-        .where(eq(matchesToUsers.userId, botUser.userId));
-      await db
-        .update(loggedActivities)
-        .set({
-          userId,
-        })
-        .where(eq(loggedActivities.userId, botUser.userId));
-    } else {
-      throw new Error("League is full and cannot be joined");
-    }
+  // Check if league is already full
+  if (league.leaguesToUsers.length >= league.size) {
+    throw new Error("League is full and cannot be joined");
   }
+
+  // Add the user to the league
   await db.insert(leaguesToUsers).values({
     userId,
     leagueId: league.id,
@@ -69,4 +41,11 @@ export const addUserToLeague = async (userId: string, league: League) => {
     lastName: user.lastName,
     isBot: false,
   });
+
+  // Check if this user joining makes the league full
+  const newMemberCount = league.leaguesToUsers.length + 1;
+  if (newMemberCount === league.size) {
+    // League is now full - generate all matches
+    await insertMatches(league.id);
+  }
 };
