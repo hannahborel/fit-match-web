@@ -2,6 +2,7 @@ import CreateLeague from "@/actions/createLeague";
 import { insertLeagueFormSchema } from "@/db/formSchema";
 
 import { NextResponse } from "next/server";
+import { ZodError } from "zod";
 
 export const POST = async (req: Request) => {
   const body = await req.json();
@@ -13,6 +14,15 @@ export const POST = async (req: Request) => {
 
     return NextResponse.json(league);
   } catch (error) {
+    // Handle Zod validation errors
+    if (error instanceof ZodError) {
+      const errorMessage = error.errors.map(err => `${err.path.join('.')}: ${err.message}`).join(', ');
+      return NextResponse.json(
+        { error: errorMessage },
+        { status: 400 } // Bad Request
+      );
+    }
+
     // Handle specific error cases
     if (error instanceof Error) {
       if (error.message.includes("already have a league")) {
@@ -27,8 +37,18 @@ export const POST = async (req: Request) => {
           { status: 401 } // Unauthorized status code
         );
       }
+
+      // Return the error message for any other Error instances
+      return NextResponse.json(
+        { error: error.message },
+        { status: 500 }
+      );
     }
 
-    return NextResponse.json({ error }, { status: 500 });
+    // Fallback for unknown error types
+    return NextResponse.json(
+      { error: 'An unexpected error occurred' },
+      { status: 500 }
+    );
   }
 };

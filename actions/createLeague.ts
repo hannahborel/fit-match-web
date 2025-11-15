@@ -50,9 +50,24 @@ const createLeague = async (data: CreateLeagueInput) => {
   }
 
   // Fetch user data to get firstName and lastName
-  const [user] = await db.select().from(users).where(eq(users.id, userId));
+  let [user] = await db.select().from(users).where(eq(users.id, userId));
+
+  // If user doesn't exist in DB, sync from Clerk
   if (!user) {
-    throw new Error("User not found");
+    const { clerkClient } = await import("@clerk/nextjs/server");
+    const clerk = await clerkClient();
+    const clerkUser = await clerk.users.getUser(userId);
+
+    // Insert user into database
+    const [newUser] = await db.insert(users).values({
+      id: userId,
+      firstName: clerkUser.firstName || "Unknown",
+      lastName: clerkUser.lastName || null,
+      email: clerkUser.emailAddresses[0]?.emailAddress || null,
+      thumbnailUrl: clerkUser.imageUrl || null,
+    }).returning();
+
+    user = newUser;
   }
 
   const insertLeagueToUser = {
