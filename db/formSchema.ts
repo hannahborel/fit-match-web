@@ -56,6 +56,10 @@ export const deleteLeagueFormSchema = z.object({
   id: defaultRequiredTextField,
 });
 
+export const deleteAccountFormSchema = z.object({
+  // No fields needed - uses authenticated user from token
+});
+
 export const logActivityFormSchema = createInsertSchema(loggedActivities, {
   leagueId: defaultRequiredTextField,
   matchId: defaultRequiredTextField,
