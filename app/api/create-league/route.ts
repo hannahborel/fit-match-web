@@ -13,41 +13,58 @@ export const POST = async (req: Request) => {
     const league = await CreateLeague(parsedBody);
 
     return NextResponse.json(league);
-  } catch (error) {
+  } catch (error: any) {
+    console.error("[createLeague error]", error);
+
     // Handle Zod validation errors
     if (error instanceof ZodError) {
       const errorMessage = error.errors.map(err => `${err.path.join('.')}: ${err.message}`).join(', ');
       return NextResponse.json(
-        { error: errorMessage },
+        {
+          error: {
+            name: error.name,
+            message: errorMessage,
+            issues: error.issues,
+          }
+        },
         { status: 400 } // Bad Request
       );
     }
 
     // Handle specific error cases
-    if (error instanceof Error) {
-      if (error.message.includes("already have a league")) {
-        return NextResponse.json(
-          { error: error.message },
-          { status: 409 } // Conflict status code
-        );
-      }
-      if (error.message.includes("must be signed in")) {
-        return NextResponse.json(
-          { error: error.message },
-          { status: 401 } // Unauthorized status code
-        );
-      }
-
-      // Return the error message for any other Error instances
+    if (error?.message?.includes("already have a league")) {
       return NextResponse.json(
-        { error: error.message },
-        { status: 500 }
+        {
+          error: {
+            name: error.name,
+            message: error.message,
+          }
+        },
+        { status: 409 } // Conflict status code
       );
     }
 
-    // Fallback for unknown error types
+    if (error?.message?.includes("must be signed in")) {
+      return NextResponse.json(
+        {
+          error: {
+            name: error.name,
+            message: error.message,
+          }
+        },
+        { status: 401 } // Unauthorized status code
+      );
+    }
+
+    // Return detailed error for debugging
     return NextResponse.json(
-      { error: 'An unexpected error occurred' },
+      {
+        error: {
+          name: error?.name || 'UnknownError',
+          message: error?.message || 'An unexpected error occurred',
+          stack: process.env.NODE_ENV === "development" ? error?.stack : undefined,
+        },
+      },
       { status: 500 }
     );
   }
