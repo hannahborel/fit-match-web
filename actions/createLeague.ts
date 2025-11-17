@@ -59,12 +59,24 @@ const createLeague = async (data: CreateLeagueInput) => {
     const clerkUser = await clerk.users.getUser(userId);
 
     // Insert user into database
+    // These fields are required - they should have been set during user registration
+    if (!clerkUser.firstName) {
+      throw new Error("First name is required. Please complete your profile.");
+    }
+    if (!clerkUser.lastName) {
+      throw new Error("Last name is required. Please complete your profile.");
+    }
+    const emailAddress = clerkUser.emailAddresses[0]?.emailAddress;
+    if (!emailAddress) {
+      throw new Error("Email address is required. Please complete your profile.");
+    }
+
     const [newUser] = await db.insert(users).values({
       id: userId,
-      firstName: clerkUser.firstName || "Unknown",
-      lastName: clerkUser.lastName || null,
-      email: clerkUser.emailAddresses[0]?.emailAddress || null,
-      thumbnailUrl: clerkUser.imageUrl || null,
+      firstName: clerkUser.firstName,
+      lastName: clerkUser.lastName,
+      email: emailAddress,
+      thumbnailUrl: clerkUser.imageUrl || undefined,
     }).returning();
 
     user = newUser;

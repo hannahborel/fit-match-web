@@ -25,9 +25,9 @@ export async function syncUserFromClerk(clerkUserData: ClerkUserData) {
     const userData = {
       id: id,
       firstName: first_name || "Unknown",
-      lastName: last_name || null,
+      lastName: last_name || undefined,
       email: email_addresses?.[0]?.email_address || "",
-      thumbnailUrl: image_url || null,
+      thumbnailUrl: image_url || undefined,
       points: 0,
       isLeagueManager: false,
       lastSyncedAt: new Date(),
