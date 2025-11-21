@@ -87,7 +87,8 @@ export const getCurrentLeague = async () => {
     `🔍 Found leaguesToUsers record for user: ${userId}, leagueId: ${leagueToUser.leagueId}`
   );
   try {
-    return await getLeagueById(leagueToUser.leagueId);
+    const league = await getLeagueById(leagueToUser.leagueId);
+    return league;
   } catch (error) {
     console.error(
       `❌ Error fetching league ${leagueToUser.leagueId} for user ${userId}:`,
@@ -95,6 +96,30 @@ export const getCurrentLeague = async () => {
     );
     throw error;
   }
+};
+
+const calculateLeagueStatus = (league: { startDate: string | Date; weeks: number }) => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const startDate = new Date(league.startDate);
+  startDate.setHours(0, 0, 0, 0);
+
+  // League hasn't started yet
+  if (startDate > today) {
+    return "upcoming" as const;
+  }
+
+  // Calculate end date (start date + weeks)
+  const endDate = new Date(startDate);
+  endDate.setDate(endDate.getDate() + league.weeks * 7);
+
+  // League is complete
+  if (today > endDate) {
+    return "complete" as const;
+  }
+
+  // League is active
+  return "active" as const;
 };
 
 export const getLeagueById = async (id: string) => {
@@ -119,7 +144,13 @@ export const getLeagueById = async (id: string) => {
     );
     throw new Error(`League not found with this ID: ${id}`);
   }
-  return league;
+
+  const status = calculateLeagueStatus(league);
+
+  return {
+    ...league,
+    status,
+  };
 };
 
 export const getLeagueByIdPublic = async (id: string) => {
@@ -154,7 +185,7 @@ export const getLeagueBySlug = async (slug: string) => {
   if (!userId) {
     throw new Error("You must be signed in");
   }
-  return await db.query.leagues.findFirst({
+  const league = await db.query.leagues.findFirst({
     where: eq(leagues.slug, slug),
     with: {
       leaguesToUsers: true,
@@ -163,6 +194,17 @@ export const getLeagueBySlug = async (slug: string) => {
       messages: true,
     },
   });
+
+  if (!league) {
+    return null;
+  }
+
+  const status = calculateLeagueStatus(league);
+
+  return {
+    ...league,
+    status,
+  };
 };
 
 export const getLeagues = async () => {
