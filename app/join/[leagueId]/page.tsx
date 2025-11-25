@@ -163,7 +163,7 @@ export default function JoinLeaguePage({ params }: JoinLeaguePageProps) {
   return (
     <div
       className="flex h-screen items-center justify-center"
-      style={{ backgroundColor: "rgba(41, 49, 66, 1)" }}
+      style={{ backgroundColor: "rgb(12, 14, 20)" }}
     >
       {/* Smart App Banner */}
       <SmartAppBanner leagueId={leagueId} />
@@ -172,7 +172,7 @@ export default function JoinLeaguePage({ params }: JoinLeaguePageProps) {
       <Card
         className="border-0 outline-none rounded-2xl py-7 px-5 min-w-[350px]"
         style={{
-          backgroundColor: "rgba(41, 49, 66, 1)",
+          backgroundColor: "rgb(12, 14, 20)",
           boxShadow:
             "0 8px 32px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2)",
         }}
